@@ -144,39 +144,39 @@ void L6470_setting_init(void)
 
     for(int itr = 0; itr < L6470_DEV_NUM; itr++)
     {
-            printf("malloc\n");
+            // printf("malloc\n");
         L6470_setting[itr] = (L6470_packet*)malloc((PARAM_NUM) * sizeof(L6470_packet));
 
         for (int enum_param = 0; enum_param < (PARAM_NUM); enum_param++)
         {
-            printf("%d\n",enum_param);
+            // printf("%d\n",enum_param);
 
             if(L6470_param[enum_param].rw == RESERVED){
                 continue;
             }else if(L6470_param[enum_param].rw == READONLY){
                 // L6470_GetParam(itr, enum_param);
             }else{
-                printf("write %d\n",enum_param);
+                // printf("write %d\n",enum_param);
                 /* copy to buf from const */
-                printf("exec genfunc\n");
+                // printf("exec genfunc\n");
                 L6470_packet pkt = fp_array[enum_param].gen_func(fp_array[enum_param].param);
-                printf("copy pkt\n");
+                // printf("copy pkt\n");
                 L6470_setting[itr][enum_param] = pkt;
                 //make temp because wiringPiSPIDataRW rewrite send data
                 L6470_packet pkt_temp;
                 pkt_temp = pkt;
 
-                printf("check len\n");
+                // printf("check len\n");
                 int len, SPI_res = 0;
                 len = L6470_param[enum_param].param_size;
     // #ifdef L6470_PRINT_MESSAGE
     //             L6470_packet send = pkt;
     // #endif
-                printf("exec rw_all\n");
+                // printf("exec rw_all\n");
                 SPI_res = L6470_rw_all(&(pkt_temp), (int)(bit2byte(len + ADDR_SIZE)), NULL);
-    // #ifdef L6470_PRINT_MESSAGE
-    //             L6470_debug_print("setting_init",&(send),&(pkt_temp));
-    // #endif
+    #ifdef L6470_PRINT_MESSAGE
+                L6470_debug_print("setting_init",&(send),&(pkt_temp));
+    #endif
             }
         }
     }
@@ -241,7 +241,7 @@ int L6470_rw_all(L6470_packet *pkt,int len, const char* msg)
     //uint8_t *data;
     //data = pkt->value8b;
 
-    printf("copy pkt\n");
+    // printf("copy pkt\n");
     L6470_packet pkts[L6470_DEV_NUM] = {0};
     for(int itr = 0; itr < L6470_DEV_NUM; itr++){
         pkts[itr] = *pkt;
@@ -249,7 +249,7 @@ int L6470_rw_all(L6470_packet *pkt,int len, const char* msg)
 
     /* summlize packet */
     // uint8_t t_pkt[L6470_DEV_NUM*len] = {0};
-    printf("summlize pkt\n");
+    // printf("summlize pkt\n");
     uint8_t t_pkt[L6470_DEV_NUM*len];
     for(int itr = 0; itr < L6470_DEV_NUM; itr++){
         for(int pkt_num = 0; pkt_num < len; pkt_num++){
@@ -260,13 +260,16 @@ int L6470_rw_all(L6470_packet *pkt,int len, const char* msg)
 //     L6470_packet send = *pkt;
 // #endif
 
-    printf("transmite pkt\n");
+    // printf("transmite pkt\n");
 	int i = 0,j = 0;
 	for (i = 0; i<len; i++){
 	//	j += wiringPiSPIDataRW(L6470_SPI_CH, data,1);
+        printf("transmit: %02x, ", t_pkt);
 		j += wiringPiSPIDataRW(L6470_SPI_CH, (unsigned char *)(t_pkt + i*L6470_DEV_NUM),L6470_DEV_NUM);
+        printf("Receive:  %02x\n ", t_pkt);
 	//	data++;
 	}
+
 
 // #ifdef L6470_PRINT_MESSAGE
 //     L6470_debug_print(msg,&(send),pkt);
