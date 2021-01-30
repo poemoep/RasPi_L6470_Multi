@@ -94,7 +94,9 @@ static void L6470_ExecCmd_NoArg( L6470_CMD cmd, const char* msg);
 static L6470_packet generate_pkt(int enum_param,int32_t val);
 static L6470_packet generate_pkt_with_percentage(int enum_param, int32_t percentage);
 
-L6470_packet (*gen_array)[PARAM_NUM](int32_t) = {
+typedef L6470_packet (*f)(int32_t);
+
+f gen_array[PARAM_NUM] = {
    /* [enum_L6470_ABS_POS   ] = */ gen_ABS_POS  , //    USER_ABS_POS  },
    /* [enum_L6470_EL_POS    ] = */ gen_EL_POS   , //    USER_EL_POS   },
    /* [enum_L6470_MARK      ] = */ gen_MARK     , //    USER_MARK     },
