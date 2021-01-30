@@ -6,7 +6,7 @@
 #include "L6470.h"
 #include "L6470_const.h"
 
-struct L6470_PARAM L6470_param[PARAM_NUM] =
+L6470_PARAM L6470_param[PARAM_NUM] =
 {
 { enum_L6470_ABS_POS      , REG_ABS_POS,      REG_SIZE_ABS_POS,       READONLY | WRITABLE_MStop },
 { enum_L6470_EL_POS       , REG_EL_POS ,      REG_SIZE_EL_POS ,       READONLY | WRITABLE_MStop},
@@ -37,7 +37,7 @@ struct L6470_PARAM L6470_param[PARAM_NUM] =
 //{ enum_L6470_RESERVED_h1B , REG_RESERVED_h1B, REG_SIZE_RESERVED_h1B,  RESERVED }  //dummy
 };
 
-const struct L6470_CMD L6470_cmd[CMD_NUM] =
+const L6470_CMD L6470_cmd[CMD_NUM] =
 {	
 {  enum_L6470_NOP,            CMD_NOP,            CMD_SIZE_NOP},
 {  enum_L6470_SETPARAM,       CMD_SETPARAM,       CMD_SIZE_SETPARAM},

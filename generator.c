@@ -12,9 +12,9 @@ static void output_header(void);
 static void output_pktStart(void);
 static void output_pktEnd(void);
 static void output_footer(void);
-static void print_pkt(union L6470_packet pkt);
-static union L6470_packet generate_pkt(int enum_param,int32_t val);
-static union L6470_packet generate_pkt_with_percentage(int enum_param, int32_t percentage);
+static void print_pkt(L6470_packet pkt);
+static L6470_packet generate_pkt(int enum_param,int32_t val);
+static L6470_packet generate_pkt_with_percentage(int enum_param, int32_t percentage);
 
 int main (int argc, char** argv)
 {
@@ -61,7 +61,7 @@ int main (int argc, char** argv)
 
 }
 
-static void print_pkt(union L6470_packet pkt)
+static void print_pkt(L6470_packet pkt)
 {
     printf("    {{\t0x%02x,\t{0x%02x,\t0x%02x,\t0x%02x}}},\n",pkt.value8b[0], pkt.value8b[1], pkt.value8b[2], pkt.value8b[3]);
 }
@@ -79,7 +79,7 @@ static void output_header()
     printf("#define L6470_DEV_NUM (%d)\n",L6470_DEV_NUM);
     // printf("#endif\n");
     printf("\n");
-    printf("const union L6470_packet L6470_user_setting[L6470_DEV_NUM][PARAM_NUM] =\n");
+    printf("const L6470_packet L6470_user_setting[L6470_DEV_NUM][PARAM_NUM] =\n");
 }
 
 static void output_pktStart()
@@ -107,19 +107,19 @@ static void output_footer()
 
 
 /* (-2^21 <= abs_pos <= +2^21 -1) with the selected step mode */
-union L6470_packet gen_ABS_POS(int32_t abs_pos)
+L6470_packet gen_ABS_POS(int32_t abs_pos)
 {
 #if defined (L6470_PRINT_MESSAGE)
     if( (abs_pos > (int32_t)(pow(2,21)-1)) | (abs_pos < (int32_t)((-1)*pow(2,21))) ) 
         printf("// %s %s abs_pos is over/under flow\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
 #endif
     int32_t val = abs_pos & (int32_t)(pow(2,21)-1);
-    union L6470_packet pkt = generate_pkt(enum_L6470_ABS_POS, val);
+    L6470_packet pkt = generate_pkt(enum_L6470_ABS_POS, val);
     return pkt;
 }
 
 /* step = 0 to 3, el_step = 0 to 127(masked with selected step mode in IC) */
-union L6470_packet gen_EL_POS(int32_t step_u_step)
+L6470_packet gen_EL_POS(int32_t step_u_step)
 {
     int32_t step = (step_u_step & STEP_ePOS_MASK);
     int32_t u_step = (step_u_step & STEP_u_STEP_MASK);
@@ -133,24 +133,24 @@ union L6470_packet gen_EL_POS(int32_t step_u_step)
 
     uint32_t val;
     val = (step + u_step);
-    union L6470_packet pkt = generate_pkt(enum_L6470_EL_POS, val);
+    L6470_packet pkt = generate_pkt(enum_L6470_EL_POS, val);
     return pkt;
 }
 
 /* (-2^21 <= mark <= +2^21 -1) with the selected step mode */
-union L6470_packet gen_MARK(int32_t mark)
+L6470_packet gen_MARK(int32_t mark)
 {
 #if defined (L6470_PRINT_MESSAGE)
     if( (mark > (int32_t)(pow(2,21)-1)) | (mark < (int32_t)((-1)*pow(2,21))) )
         printf("// %s %s MARK is over/under flow\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
 #endif
     int32_t val = ( mark & (int32_t)(pow(2,21) - 1) );
-    union L6470_packet pkt = generate_pkt(enum_L6470_MARK, mark);
+    L6470_packet pkt = generate_pkt(enum_L6470_MARK, mark);
     return pkt;
 }
 
 /* step_per_ss = N x ACC_RESOLUTION [x0.01 step/s^2]*/
-union L6470_packet gen_ACC(int32_t step_per_ss)
+L6470_packet gen_ACC(int32_t step_per_ss)
 {
     int32_t val = (int32_t)round((double)step_per_ss / ACC_RESOLUTION) ;
 #if defined (L6470_PRINT_MESSAGE)
@@ -166,12 +166,12 @@ union L6470_packet gen_ACC(int32_t step_per_ss)
     } 
 #endif
 
-    union L6470_packet pkt = generate_pkt(enum_L6470_ACC, val);
+    L6470_packet pkt = generate_pkt(enum_L6470_ACC, val);
     return pkt;
 }
 
 /* step_per_ss = N x DEC_RESOLUTION [0.01 step/s^2] */
-union L6470_packet gen_DEC(int32_t step_per_ss)
+L6470_packet gen_DEC(int32_t step_per_ss)
 {
     int32_t val = (int32_t)round((double)step_per_ss / DEC_RESOLUTION);
 #if defined (L6470_PRINT_MESSAGE)
@@ -186,12 +186,12 @@ union L6470_packet gen_DEC(int32_t step_per_ss)
     } 
 #endif
 
-    union L6470_packet pkt = generate_pkt(enum_L6470_DEC, val);
+    L6470_packet pkt = generate_pkt(enum_L6470_DEC, val);
     return pkt;
 }
 
 /* step_per_s = N x MAX_SPEED_RESOLUTION [x0.01 step/s^2]*/
-union L6470_packet gen_MAX_SPEED(int32_t step_per_s)
+L6470_packet gen_MAX_SPEED(int32_t step_per_s)
 {
     int32_t val = (int32_t)round(((double)step_per_s - MAX_SPEED_MIN) / MAX_SPEED_RESOLUTION);
 #if defined (L6470_PRINT_MESSAGE)
@@ -206,14 +206,14 @@ union L6470_packet gen_MAX_SPEED(int32_t step_per_s)
     } 
 #endif
 
-    union L6470_packet pkt = generate_pkt(enum_L6470_MAX_SPEED, val);
+    L6470_packet pkt = generate_pkt(enum_L6470_MAX_SPEED, val);
     return pkt;
 }
 
 /* step_per_s = M x MIN_SPEED_RESOLUTION, enable_LSPD = ENABLE_LSPD or DISABLE */
-union L6470_packet gen_MIN_SPEED(int32_t enable_LSPD_step_per_s)
+L6470_packet gen_MIN_SPEED(int32_t enable_LSPD_step_per_s)
 {
-    union L6470_packet pkt = {0};
+    L6470_packet pkt = {0};
     if( 0 != (enable_LSPD_step_per_s & (0b01111110 << (ENABLE_LSPD_MAGIC)) ) ) {
 #if defined (L6470_PRINT_MESSAGE)
         printf("// %s %s MIN_SPEED is over\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
@@ -239,35 +239,35 @@ union L6470_packet gen_MIN_SPEED(int32_t enable_LSPD_step_per_s)
 }
 
 /* percentage = 0 to 10000 [0.01%]*/
-union L6470_packet gen_KVAL_HOLD(int32_t percentage)
+L6470_packet gen_KVAL_HOLD(int32_t percentage)
 {
-    union L6470_packet pkt = generate_pkt_with_percentage(enum_L6470_KVAL_HOLD, percentage);
+    L6470_packet pkt = generate_pkt_with_percentage(enum_L6470_KVAL_HOLD, percentage);
     return pkt;
 }
 
 /* percentage = 0 to 10000 [0.01%] */
-union L6470_packet gen_KVAL_RUN(int32_t percentage)
+L6470_packet gen_KVAL_RUN(int32_t percentage)
 {
-    union L6470_packet pkt = generate_pkt_with_percentage(enum_L6470_KVAL_RUN, percentage);
+    L6470_packet pkt = generate_pkt_with_percentage(enum_L6470_KVAL_RUN, percentage);
     return pkt;
 }
 
 /* percentage = 0 to 10000 [0.01%] */
-union L6470_packet gen_KVAL_ACC(int32_t percentage)
+L6470_packet gen_KVAL_ACC(int32_t percentage)
 {
-    union L6470_packet pkt = generate_pkt_with_percentage(enum_L6470_KVAL_ACC, percentage);
+    L6470_packet pkt = generate_pkt_with_percentage(enum_L6470_KVAL_ACC, percentage);
     return pkt;
 }
 
 /* percentage = 0 to 10000 [0.01%] */
-union L6470_packet gen_KVAL_DEC(int32_t percentage)
+L6470_packet gen_KVAL_DEC(int32_t percentage)
 {
-    union L6470_packet pkt = generate_pkt_with_percentage(enum_L6470_KVAL_DEC, percentage);
+    L6470_packet pkt = generate_pkt_with_percentage(enum_L6470_KVAL_DEC, percentage);
     return pkt;
 }
 
 /* step_per_s = N x INT_SPEED_RESOLUTION [x0.0001 step/s] */
-union L6470_packet gen_INT_SPEED(int32_t step_per_s)
+L6470_packet gen_INT_SPEED(int32_t step_per_s)
 {
     uint32_t val = (int32_t)round((double)step_per_s / INT_SPEED_RESOLUTION);
 #if defined (L6470_PRINT_MESSAGE)
@@ -277,12 +277,12 @@ union L6470_packet gen_INT_SPEED(int32_t step_per_s)
     } 
 #endif
 
-    union L6470_packet pkt = generate_pkt(enum_L6470_INT_SPEED, val);
+    L6470_packet pkt = generate_pkt(enum_L6470_INT_SPEED, val);
     return pkt;
 }
 
 /* slp = N x ST_SLP_RESOLUTION [x0.000001]*/
-union L6470_packet gen_ST_SLP(int32_t slp)
+L6470_packet gen_ST_SLP(int32_t slp)
 {
     uint32_t val = (int32_t)round((double)slp / ST_SLP_RESOLUTION);
 #if defined (L6470_PRINT_MESSAGE)
@@ -291,12 +291,12 @@ union L6470_packet gen_ST_SLP(int32_t slp)
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * ST_SLP_RESOLUTION));
     } 
 #endif
-    union L6470_packet pkt = generate_pkt(enum_L6470_ST_SLP, val);
+    L6470_packet pkt = generate_pkt(enum_L6470_ST_SLP, val);
     return pkt;
 }
 
 /* slp_acc = N x FN_SLP_ACC_RESOLUTION*/
-union L6470_packet gen_FN_SLP_ACC(int32_t slp_acc)
+L6470_packet gen_FN_SLP_ACC(int32_t slp_acc)
 {
     uint32_t val = (int32_t)round((double)slp_acc / FN_SLP_ACC_RESOLUTION);
 #if defined (L6470_PRINT_MESSAGE)
@@ -305,12 +305,12 @@ union L6470_packet gen_FN_SLP_ACC(int32_t slp_acc)
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * FN_SLP_ACC_RESOLUTION));
     }
 #endif
-    union L6470_packet pkt = generate_pkt(enum_L6470_FN_SLP_ACC, val);
+    L6470_packet pkt = generate_pkt(enum_L6470_FN_SLP_ACC, val);
     return pkt;
 }
 
 /* slp_dec = N x FN_SLP_DEC_RESOLUTION [x0.000001]*/
-union L6470_packet gen_FN_SLP_DEC(int32_t slp_dec)
+L6470_packet gen_FN_SLP_DEC(int32_t slp_dec)
 {
     uint32_t val = (int32_t)round((double)slp_dec / FN_SLP_DEC_RESOLUTION);
 #if defined (L6470_PRINT_MESSAGE)
@@ -319,12 +319,12 @@ union L6470_packet gen_FN_SLP_DEC(int32_t slp_dec)
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * FN_SLP_DEC_RESOLUTION));
     } 
 #endif
-    union L6470_packet pkt = generate_pkt(enum_L6470_FN_SLP_DEC, val);
+    L6470_packet pkt = generate_pkt(enum_L6470_FN_SLP_DEC, val);
     return pkt;
 }
 
 /* k_therm = N x K_THERM_RESOLUTION */
-union L6470_packet gen_K_THERM(int32_t k_therm)
+L6470_packet gen_K_THERM(int32_t k_therm)
 {
     int32_t val = (int32_t)round((double)(k_therm - K_THERM_MIN) / K_THERM_RESOLUTION);
 #if defined (L6470_PRINT_MESSAGE)
@@ -333,12 +333,12 @@ union L6470_packet gen_K_THERM(int32_t k_therm)
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * K_THERM_RESOLUTION) + K_THERM_MIN);
     } 
 #endif
-    union L6470_packet pkt = generate_pkt(enum_L6470_K_THERM, val);
+    L6470_packet pkt = generate_pkt(enum_L6470_K_THERM, val);
     return pkt;
 }
 
 /* ocd_th = 375 to 6000 mA */
-union L6470_packet gen_OCD_TH(int32_t ocd_th)
+L6470_packet gen_OCD_TH(int32_t ocd_th)
 {
     uint32_t val = (int32_t)round((double)(ocd_th - OCD_TH_RESOLUTION) / OCD_TH_RESOLUTION);
 #if defined (L6470_PRINT_MESSAGE)
@@ -347,12 +347,12 @@ union L6470_packet gen_OCD_TH(int32_t ocd_th)
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, ((int32_t)round((double)val * OCD_TH_RESOLUTION) + OCD_TH_RESOLUTION));
     } 
 #endif
-    union L6470_packet pkt = generate_pkt(enum_L6470_OCD_TH, val);
+    L6470_packet pkt = generate_pkt(enum_L6470_OCD_TH, val);
     return pkt;
 }
 
 /* stall_th = 31.25 to 4000 mA */
-union L6470_packet gen_STALL_TH(int32_t stall_th)
+L6470_packet gen_STALL_TH(int32_t stall_th)
 {
     int32_t val = (int32_t)round((double)(stall_th - STALL_TH_RESOLUTION) / STALL_TH_RESOLUTION);
 #if defined (L6470_PRINT_MESSAGE)
@@ -361,11 +361,11 @@ union L6470_packet gen_STALL_TH(int32_t stall_th)
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, ((int32_t)round((double)val * STALL_TH_RESOLUTION) + STALL_TH_RESOLUTION));
     } 
 #endif    
-    union L6470_packet pkt = generate_pkt(enum_L6470_STALL_TH, val);
+    L6470_packet pkt = generate_pkt(enum_L6470_STALL_TH, val);
     return pkt;
 }
 /* fs_spd = 7.63(FS_SPD_MIN) to 15625 [step/s] */
-union L6470_packet gen_FS_SPD(int32_t fs_spd)
+L6470_packet gen_FS_SPD(int32_t fs_spd)
 {
     uint32_t val = (int32_t)round((double)(fs_spd - FS_SPD_MIN) / FS_SPD_RESOLUTION);
 #if defined (L6470_PRINT_MESSAGE)
@@ -375,12 +375,12 @@ union L6470_packet gen_FS_SPD(int32_t fs_spd)
     } 
 #endif   
 
-    union L6470_packet pkt = generate_pkt(enum_L6470_FS_SPD, val);
+    L6470_packet pkt = generate_pkt(enum_L6470_FS_SPD, val);
     return pkt;
 }
 
 /* sync_en = SYNC_EN or DISABLE, sync_sel = SYNC_FFS_*, step_sel = STEP_* */
-union L6470_packet gen_STEP_MODE(int32_t mode)
+L6470_packet gen_STEP_MODE(int32_t mode)
 {
 #if defined (L6470_PRINT_MESSAGE)
     uint8_t sync_en = (mode & SYNC_EN);
@@ -390,20 +390,20 @@ union L6470_packet gen_STEP_MODE(int32_t mode)
         printf("// %s %s sync_sel is less than equal step_sel.\n",L6470_PRINT_HEADER, L6470_PRINT_CAUTION);    
 #endif
     int32_t val = mode;
-    union L6470_packet pkt = generate_pkt(enum_L6470_STEP_MODE, val);
+    L6470_packet pkt = generate_pkt(enum_L6470_STEP_MODE, val);
     return pkt;
 }
 
 /* alm = ALM_* | ALM_* ... */
-union L6470_packet gen_ALARM_EN(int32_t alm)
+L6470_packet gen_ALARM_EN(int32_t alm)
 {
     int32_t val = alm;
-    union L6470_packet pkt = generate_pkt(enum_L6470_ALARM_EN, val);
+    L6470_packet pkt = generate_pkt(enum_L6470_ALARM_EN, val);
     return pkt;
 }
 
 /* f_pwm_int, f_pwm_dec, pow_sr, oc_sd, en_vscomp, sw_mode, ext_clk, osc_sel */
-union L6470_packet gen_CONFIG(int32_t param)
+L6470_packet gen_CONFIG(int32_t param)
 {
 #if 0
 #if defined (L6470_PRINT_MESSAGE)
@@ -419,13 +419,13 @@ union L6470_packet gen_CONFIG(int32_t param)
 #endif
 
     int32_t val =  param;
-    union L6470_packet pkt = generate_pkt(enum_L6470_CONFIG, val);
+    L6470_packet pkt = generate_pkt(enum_L6470_CONFIG, val);
     return pkt;
 }
 
-static union L6470_packet generate_pkt(int enum_param,int32_t val)
+static L6470_packet generate_pkt(int enum_param,int32_t val)
 {
-    union L6470_packet pkt = {0};
+    L6470_packet pkt = {0};
     pkt.data.reg_addr = L6470_param[enum_param].addr;
 
     int size = L6470_param[enum_param].param_size;
@@ -445,9 +445,9 @@ static union L6470_packet generate_pkt(int enum_param,int32_t val)
 }
 
 /* percentage = 0 to 10000 [x0.01%] */
-static union L6470_packet generate_pkt_with_percentage(int enum_param, int32_t percentage)
+static L6470_packet generate_pkt_with_percentage(int enum_param, int32_t percentage)
 {
-    union L6470_packet pkt = {0};
+    L6470_packet pkt = {0};
     if( (percentage < 0) | (10000 < percentage) )
     {
 #if defined (L6470_PRINT_MESSAGE)
