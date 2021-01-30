@@ -380,7 +380,6 @@ typedef union{
 }L6470_packet;
 
 
-#include "L6470_user.h"
 
 extern L6470_packet *L6470_setting[L6470_DEV_NUM];
 
