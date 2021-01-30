@@ -284,19 +284,20 @@ int L6470_rw_multi(L6470_packet *pkt,int len, const char* msg, ...)
 {
     //uint8_t *data;
     //data = pkt->value8b;
-
+    printf("rw_multi start\n");
     va_list args;
     va_start(args,L6470_DEV_NUM * 3);
 
 #ifdef L6470_PRINT_MESSAGE
     L6470_packet* send[L6470_DEV_NUM];
 #endif
-
+    printf("daclare value\n");
     L6470_packet* input_pkt[L6470_DEV_NUM] = {0};
     int input_len[L6470_DEV_NUM] = {0};
     char* input_msg[L6470_DEV_NUM] = {0};
     int max_len = 0;
 
+    printf("args to array\n");
     /* change args to array for useful format */
     for(int itr = 0; itr < L6470_DEV_NUM; itr++)
     {
@@ -305,6 +306,7 @@ int L6470_rw_multi(L6470_packet *pkt,int len, const char* msg, ...)
         input_msg[itr] = va_arg(args, char *);
     }
 
+    printf("summarize pkts to array\n");
     uint8_t trans_pkt[L6470_DEV_NUM*4] = {0};
     /* summarize pkts to uint8_t array */
     for(int itr = 0; itr < L6470_DEV_NUM; itr++){
@@ -323,6 +325,7 @@ int L6470_rw_multi(L6470_packet *pkt,int len, const char* msg, ...)
 #endif
     }
 
+    printf("transmite packets\n");
     /*  transmission all packets */
 	int i = 0,j = 0;
 	for (i = 0; i<max_len; i++){
@@ -336,6 +339,7 @@ int L6470_rw_multi(L6470_packet *pkt,int len, const char* msg, ...)
 	//	data++;
 	}
 
+    printf("distribute packets\n");
     /* distribute packets to original pointer */
     for(int itr = 0; itr < L6470_DEV_NUM; itr++)
     {
@@ -345,6 +349,7 @@ int L6470_rw_multi(L6470_packet *pkt,int len, const char* msg, ...)
 #ifdef L6470_PRINT_MESSAGE
         L6470_debug_print(input_msg[itr], send[itr], input_pkt[itr]);
 #endif
+    printf("fin\n");
     }
 
 
