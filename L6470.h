@@ -72,12 +72,12 @@
 #define STEP_64DIV  (0b110)
 #define STEP_128DIV (0b111)
 
-#define SYNC_FFS_ofset  (4)
-#define SYNC_FFS_2DIV   (0b000 << SYNC_FFS_ofset) // EL_POS[7]
-#define SYNC_FFS        (0b001 << SYNC_FFS_ofset) // EL_POS[6]
-#define SYNC_FFS_2TIMES (0b010 << SYNC_FFS_ofset) // EL_POS[5]
-#define SYNC_FFS_4TIMES (0b011 << SYNC_FFS_ofset) // EL_POS[4]
-#define SYNC_FFS_8TIMES (0b100 << SYNC_FFS_ofset) // EL_POS[3]
+#define SYNC_FFS_ofset   (4)
+#define SYNC_FFS_2DIV    (0b000 << SYNC_FFS_ofset) // EL_POS[7]
+#define SYNC_FFS         (0b001 << SYNC_FFS_ofset) // EL_POS[6]
+#define SYNC_FFS_2TIMES  (0b010 << SYNC_FFS_ofset) // EL_POS[5]
+#define SYNC_FFS_4TIMES  (0b011 << SYNC_FFS_ofset) // EL_POS[4]
+#define SYNC_FFS_8TIMES  (0b100 << SYNC_FFS_ofset) // EL_POS[3]
 #define SYNC_FFS_16TIMES (0b101 << SYNC_FFS_ofset) // EL_POS[2]
 #define SYNC_FFS_32TIMES (0b110 << SYNC_FFS_ofset) // EL_POS[1]
 #define SYNC_FFS_64TIMES (0b111 << SYNC_FFS_ofset) // EL_POS[0]
