@@ -6,7 +6,7 @@
 #include "L6470.h"
 
 
-const struct L6470_PARAM L6470_param[PARAM_NUM] =
+struct L6470_PARAM L6470_param[PARAM_NUM] =
 {
 { enum_L6470_ABS_POS      , REG_ABS_POS,      REG_SIZE_ABS_POS,       READONLY | WRITABLE_MStop },
 { enum_L6470_EL_POS       , REG_EL_POS ,      REG_SIZE_EL_POS ,       READONLY | WRITABLE_MStop},

@@ -25,7 +25,7 @@
 #include "L6470_user.h"
 
 // uint8_t *REG_SIZE;
-union L6470_packet *L6470_setting;
+union L6470_packet *L6470_setting[L6470_DEV_NUM];
 
 static uint32_t spiSpeeds [2];
 static int 	spiFds [2];
@@ -103,33 +103,35 @@ void L6470_setting_init(void)
     printf("%s setting_init start\n",L6470_PRINT_HEADER);
 #endif
 
+    // for(int itr = 0; itr < L6470_DEV_NUM; itr++)
+    // {
+    //     L6470_setting[itr] = (union L6470_packet*)malloc((PARAM_NUM) * sizeof(union L6470_packet));
 
-    L6470_setting = (union L6470_packet*)malloc((PARAM_NUM) * sizeof(union L6470_packet));
+    //     for (int enum_param = 0; enum_param < (PARAM_NUM); enum_param++)
+    //     {
+    //         if(L6470_param[itr][enum_param].rw == RESERVED){
+    //             continue;
+    //         }else if(L6470_param[itr][enum_param].rw == READONLY){
+    //             L6470_GetParam(itr, enum_param);
+    //         }else{
+    //             /* copy to buf from const */
+    //             L6470_setting[enum_param] = L6470_user_setting[enum_param];
+    //             //make temp because wiringPiSPIDataRW rewrite send data
+    //             union L6470_packet pkt_temp;
+    //             pkt_temp = L6470_user_setting[enum_param];
 
-    for (int enum_param = 0; enum_param < (PARAM_NUM); enum_param++)
-    {
-        if(L6470_param[enum_param].rw == RESERVED){
-            continue;
-        }else if(L6470_param[enum_param].rw == READONLY){
-            L6470_GetParam(enum_param);
-        }else{
-            /* copy to buf from const */
-            L6470_setting[enum_param] = L6470_user_setting[enum_param];
-            //make temp because wiringPiSPIDataRW rewrite send data
-            union L6470_packet pkt_temp;
-            pkt_temp = L6470_user_setting[enum_param];
-
-            int len, SPI_res = 0;
-            len = L6470_param[enum_param].param_size;
-#ifdef L6470_PRINT_MESSAGE
-            union L6470_packet send = L6470_user_setting[enum_param];
-#endif
-            SPI_res = L6470_rw(&(pkt_temp), (int)(bit2byte(len + ADDR_SIZE)), NULL);
-#ifdef L6470_PRINT_MESSAGE
-            L6470_debug_print("setting_init",&(send),&(pkt_temp));
-#endif
-        }
-    }
+    //             int len, SPI_res = 0;
+    //             len = L6470_param[enum_param].param_size;
+    // #ifdef L6470_PRINT_MESSAGE
+    //             union L6470_packet send = L6470_user_setting[enum_param];
+    // #endif
+    //             SPI_res = L6470_rw(&(pkt_temp), (int)(bit2byte(len + ADDR_SIZE)), NULL);
+    // #ifdef L6470_PRINT_MESSAGE
+    //             L6470_debug_print("setting_init",&(send),&(pkt_temp));
+    // #endif
+    //         }
+    //     }
+    // }
 
 #ifdef L6470_PRINT_MESSAGE
     printf("%s setting_init end\n",L6470_PRINT_HEADER);
@@ -190,7 +192,7 @@ int L6470_rw_multi(union L6470_packet *pkt,int len, const char* msg, ...)
     //uint8_t *data;
     //data = pkt->value8b;
 
-
+    va_list args;
     va_start(args,L6470_DEV_NUM * 3);
 
 #ifdef L6470_PRINT_MESSAGE
@@ -330,7 +332,7 @@ union L6470_packet L6470_MoveRun(uint8_t dir, uint32_t speed)
 union L6470_packet L6470_MoveStepClock(uint8_t dir)
 {
     // L6470_ExecCmd(L6470_cmd[enum_L6470_MOVESTEPCLOCK],dir,0, "MoveStepClock");
-    return L6470_makeCmd((L6470_cmd[enum_L6470_MOVESTEPCLOCK],dir,0);
+    return L6470_makeCmd(L6470_cmd[enum_L6470_MOVESTEPCLOCK],dir,0);
 }
 /* step = 0 to 4194303(2^22) [step] */
 union L6470_packet L6470_MoveStep(uint8_t dir,uint32_t step)
