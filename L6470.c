@@ -158,9 +158,9 @@ void L6470_setting_init(void)
         }else{
             /* copy to buf from const */
             L6470_packet pkt = fp_array[enum_param].gen_func(fp_array[enum_param].param);
-            char c = 0;
-            printf("%02x. %02x, %02x, %02x\n",pkt.value8b[0],pkt.value8b[1],pkt.value8b[2],pkt.value8b[3]);
-            c = getchar();
+            // char c = 0;
+            // printf("%02x. %02x, %02x, %02x\n",pkt.value8b[0],pkt.value8b[1],pkt.value8b[2],pkt.value8b[3]);
+            // c = getchar();
          for(int itr = 0; itr < L6470_DEV_NUM; itr++)
             {
                 L6470_setting[itr][enum_param] = pkt;
