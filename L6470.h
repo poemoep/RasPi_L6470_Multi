@@ -8,7 +8,6 @@
 #include <stdint.h>
 #include <unistd.h>
 
-#include "L6470_user.h"
 
 #ifndef __L6470_HEADER
 #define __L6470_HEADER
