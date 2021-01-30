@@ -13,7 +13,7 @@ int main(int argc, char** argv)
 
 
     int pos_aim,pos;
-    L6470_packet pkt_r = L6470_MoveRun(DIR_FWD,25000000);
+    L6470_packet pkt_r = L6470_MoveRun(DIR_FWD,2500000);
     L6470_packet pkt_l = pkt_r;
     char c = 0;
     c = getchar();
