@@ -380,13 +380,15 @@ typedef union{
 }L6470_packet;
 
 
+extern const  L6470_CMD L6470_cmd[CMD_NUM];
+extern const  L6470_PARAM L6470_param[PARAM_NUM];
 //----prottype declaration---
 void L6470_SPI_init(void);
 void L6470_reg_size_init(void);
 void L6470_setting_init(void);
 void L6470_init(void);
 int  L6470_rw(L6470_packet *pkt,int len,const char* msg);
-int L6470_rw_all(L6470_packet *pkt,int len, const char* msg);
+int  L6470_rw_all(L6470_packet *pkt,int len, const char* msg);
 int  L6470_rw_multi(L6470_packet *pkt,int len, const char* msg, ...);
 L6470_packet L6470_nop(int times);
 L6470_packet L6470_SetParam(int enum_param,uint32_t value);
