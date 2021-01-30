@@ -154,7 +154,7 @@ void L6470_setting_init(void)
                 // L6470_GetParam(itr, enum_param);
             }else{
                 /* copy to buf from const */
-                L6470_packet pkt = fp_array[enum_param].gen_function(fp_array[enum_param].param);
+                L6470_packet pkt = fp_array[enum_param].gen_func(fp_array[enum_param].param);
     //             L6470_setting[enum_param] = L6470_user_setting[enum_param];
     //             //make temp because wiringPiSPIDataRW rewrite send data
     //             L6470_packet pkt_temp;
