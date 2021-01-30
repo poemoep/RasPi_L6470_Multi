@@ -14,7 +14,7 @@
 
 // #include <sys/ioctl.h>
 // #include <asm/ioctl.h>
-//  #include <linux/spi/spidev.h>
+ #include <linux/spi/spidev.h>
 
 #include "wiringPi.h"
 #include "wiringPiSPI.h"
