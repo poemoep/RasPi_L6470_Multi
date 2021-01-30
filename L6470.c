@@ -227,7 +227,7 @@ int L6470_rw_multi(union L6470_packet *pkt,int len, const char* msg, ...)
         input_msg[itr] = input_msg[itr];
 
 #ifdef L6470_PRINT_MESSAGE
-        send[itr] = *trans_pkt[itr];
+        send[itr] = input_pkt[itr];
 #endif
     }
 
