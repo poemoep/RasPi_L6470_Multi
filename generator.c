@@ -8,9 +8,11 @@
 // #include "L6470.h"
 #include "generator.h"
 
-static int output_header(void);
-static int output_footer(void);
-static int print_pkt(union L6470_packet pkt);
+static void output_header(void);
+static void output_pktStart(void);
+static void output_pktEnd(void);
+static void output_footer(void);
+static void print_pkt(union L6470_packet pkt);
 static union L6470_packet generate_pkt(int enum_param,int32_t val);
 static union L6470_packet generate_pkt_with_percentage(int enum_param, int32_t percentage);
 
@@ -20,7 +22,7 @@ int main (int argc, char** argv)
 
     for(int i = 0; i < L6470_DEV_NUM; i++){
 
-        output_packetStart();
+        output_pktStart();
 
         print_pkt(gen_ABS_POS(USER_ABS_POS));
         print_pkt(gen_EL_POS(USER_EL_POS));
@@ -47,7 +49,7 @@ int main (int argc, char** argv)
         print_pkt(gen_ALARM_EN(USER_ALARM_EN));
         print_pkt(gen_CONFIG(USER_CONFIG));
 
-        output_packetEnd();
+        output_pktEnd();
         if((L6470_DEV_NUM - 1) == i)
         {
             printf(";");
@@ -86,14 +88,14 @@ static void output_header()
     printf("const union L6470_packet L6470_user_setting[L6470_DEV_NUM][PARAM_NUM] =\n");
 }
 
-static void output_packetStart()
+static void output_pktStart()
 {
     printf("{// L6470_PARAM_addr,     setting[2],setting[1],setting[0]} //reset_val\n");
     printf("//Left justified, MSB first\n");
     printf("\n");
 }
 
-static void output_packetEnd()
+static void output_pktEnd()
 {
     // printf("    //Dummy READONLY param &  RESERVED param\n");
     printf("    {{0x19,        {0x00,   0x00,   0x00}}}//, //dummy\n");
