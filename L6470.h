@@ -377,7 +377,7 @@ typedef struct{
 }L6470_Data;
 
 typedef union{
-  struct L6470_Data data;
+  L6470_Data data;
   uint8_t value8b[4];
   uint32_t value32b;
 }L6470_packet;
