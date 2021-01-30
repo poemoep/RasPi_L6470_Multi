@@ -99,7 +99,7 @@ typedef L6470_packet (*f)(int32_t);
 struct {
     f gen_func;
     int32_t param;
-} gen_array[PARAM_NUM] = {
+} fp_array[PARAM_NUM] = {
    /* [enum_L6470_ABS_POS   ] = */ { gen_ABS_POS  ,     USER_ABS_POS  },
    /* [enum_L6470_EL_POS    ] = */ { gen_EL_POS   ,     USER_EL_POS   },
    /* [enum_L6470_MARK      ] = */ { gen_MARK     ,     USER_MARK     },
