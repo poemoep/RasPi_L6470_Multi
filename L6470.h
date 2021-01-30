@@ -408,12 +408,5 @@ L6470_packet L6470_HiZHard(void);
 int32_t L6470_GetAbsPos(void);
 uint16_t L6470_GetStatus(void);
 
-
-
-#if defined (L6470_PRINT_MESSAGE)
-#define L6470_PRINT_HEADER "[L6470 DEBUG]: "
-#define L6470_PRINT_CAUTION "Caution"
-#endif
-
 #endif
 

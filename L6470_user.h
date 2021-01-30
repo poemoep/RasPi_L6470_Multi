@@ -19,8 +19,6 @@
 /* ----define SPI slave setting----*/
 #define L6470_DEV_NUM (2)
 
-extern L6470_packet *L6470_setting[L6470_DEV_NUM];
-
 const L6470_packet L6470_user_setting[L6470_DEV_NUM][PARAM_NUM] =
 {
     {
@@ -87,5 +85,11 @@ const L6470_packet L6470_user_setting[L6470_DEV_NUM][PARAM_NUM] =
 //    {{REG_RESERVED_h1B,  {0x00,   0x00,   0x00}}}, //dummy
     }
 };
+
+extern L6470_packet *L6470_setting[L6470_DEV_NUM];
+#if defined (L6470_PRINT_MESSAGE)
+#define L6470_PRINT_HEADER "[L6470 DEBUG]: "
+#define L6470_PRINT_CAUTION "Caution"
+#endif
 
 #endif
