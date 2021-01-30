@@ -98,31 +98,31 @@ typedef struct{
     L6470_packet * gen_func(int32_t).
     int32_t param
 } fp_array[PARAM_NUM] = {
-  [enum_L6470_ABS_POS   ] = { gen_ABS_POS   ,     USER_ABS_POS  },
-  [enum_L6470_EL_POS    ] = { gen_EL_POS    ,     USER_EL_POS   },
-  [enum_L6470_MARK      ] = { gen_MARK      ,     USER_MARK     },
-  [enum_L6470_SPEED     ] = { NULL          ,     0             }, //readonly
-  [enum_L6470_ACC       ] = { gen_ACC       ,     USER_ACC      },
-  [enum_L6470_DEC       ] = { gen_DEC       ,     USER_DEC      },
-  [enum_L6470_MAX_SPEED ] = { gen_MAX_SPEED ,     USER_MAX_SPEED},
-  [enum_L6470_MIN_SPEED ] = { gen_MIN_SPEED ,     USER_MIN_SPEED},
-  [enum_L6470_KVAL_HOLD ] = { gen_KVAL_HOLD ,     USER_KVAL_HOLD},
-  [enum_L6470_KVAL_RUN  ] = { gen_KVAL_RUN  ,     USER_KVAL_RUN },
-  [enum_L6470_KVAL_ACC  ] = { gen_KVAL_ACC  ,     USER_KVAL_ACC },
-  [enum_L6470_KVAL_DEC  ] = { gen_KVAL_DEC  ,     USER_KVAL_DEC },
-  [enum_L6470_INT_SPEED ] = { gen_INT_SPEED ,     USER_INT_SPEED},
-  [enum_L6470_ST_SLP    ] = { gen_ST_SLP    ,     USER_ST_SLP   },
-  [enum_L6470_FN_SLP_ACC] = { gen_FN_SLP_ACC,     USER_FN_SLP_ACC},
-  [enum_L6470_FN_SLP_DEC] = { gen_FN_SLP_DEC,     USER_FN_SLP_DEC},
-  [enum_L6470_K_THERM   ] = { gen_K_THERM   ,     USER_K_THERM  },
-  [enum_L6470_ADC_OUT   ] = { NULL          ,     0}, //readonly
-  [enum_L6470_OCD_TH    ] = { gen_OCD_TH    ,     USER_OCD_TH   },
-  [enum_L6470_STALL_TH  ] = { gen_STALL_TH  ,     USER_STALL_TH },
-  [enum_L6470_FS_SPD    ] = { gen_FS_SPD    ,     USER_FS_SPD   },
-  [enum_L6470_STEP_MODE ] = { gen_STEP_MODE ,     USER_STEP_MODE},
-  [enum_L6470_ALARM_EN  ] = { gen_ALARM_EN  ,     USER_ALARM_EN },
-  [enum_L6470_CONFIG    ] = { gen_CONFIG    ,     USER_CONFIG   },
-  [enum_L6470_STATUS    ] = { NULL          ,     0             } //readonly
+   /* [enum_L6470_ABS_POS   ] = */{ gen_ABS_POS   ,     USER_ABS_POS  },
+   /* [enum_L6470_EL_POS    ] = */{ gen_EL_POS    ,     USER_EL_POS   },
+   /* [enum_L6470_MARK      ] = */{ gen_MARK      ,     USER_MARK     },
+   /* [enum_L6470_SPEED     ] = */{ NULL          ,     0             }, //readonly
+   /* [enum_L6470_ACC       ] = */{ gen_ACC       ,     USER_ACC      },
+   /* [enum_L6470_DEC       ] = */{ gen_DEC       ,     USER_DEC      },
+   /* [enum_L6470_MAX_SPEED ] = */{ gen_MAX_SPEED ,     USER_MAX_SPEED},
+   /* [enum_L6470_MIN_SPEED ] = */{ gen_MIN_SPEED ,     USER_MIN_SPEED},
+   /* [enum_L6470_KVAL_HOLD ] = */{ gen_KVAL_HOLD ,     USER_KVAL_HOLD},
+   /* [enum_L6470_KVAL_RUN  ] = */{ gen_KVAL_RUN  ,     USER_KVAL_RUN },
+   /* [enum_L6470_KVAL_ACC  ] = */{ gen_KVAL_ACC  ,     USER_KVAL_ACC },
+   /* [enum_L6470_KVAL_DEC  ] = */{ gen_KVAL_DEC  ,     USER_KVAL_DEC },
+   /* [enum_L6470_INT_SPEED ] = */{ gen_INT_SPEED ,     USER_INT_SPEED},
+   /* [enum_L6470_ST_SLP    ] = */{ gen_ST_SLP    ,     USER_ST_SLP   },
+   /* [enum_L6470_FN_SLP_ACC] = */{ gen_FN_SLP_ACC,     USER_FN_SLP_ACC},
+   /* [enum_L6470_FN_SLP_DEC] = */{ gen_FN_SLP_DEC,     USER_FN_SLP_DEC},
+   /* [enum_L6470_K_THERM   ] = */{ gen_K_THERM   ,     USER_K_THERM  },
+   /* [enum_L6470_ADC_OUT   ] = */{ NULL          ,     0}, //readonly
+   /* [enum_L6470_OCD_TH    ] = */{ gen_OCD_TH    ,     USER_OCD_TH   },
+   /* [enum_L6470_STALL_TH  ] = */{ gen_STALL_TH  ,     USER_STALL_TH },
+   /* [enum_L6470_FS_SPD    ] = */{ gen_FS_SPD    ,     USER_FS_SPD   },
+   /* [enum_L6470_STEP_MODE ] = */{ gen_STEP_MODE ,     USER_STEP_MODE},
+   /* [enum_L6470_ALARM_EN  ] = */{ gen_ALARM_EN  ,     USER_ALARM_EN },
+   /* [enum_L6470_CONFIG    ] = */{ gen_CONFIG    ,     USER_CONFIG   },
+   /* [enum_L6470_STATUS    ] = */{ NULL          ,     0             } //readonly
 //  enum_L6470_RESERVED_h1A,
 //  enum_L6470_RESERVED_h1B,
 
