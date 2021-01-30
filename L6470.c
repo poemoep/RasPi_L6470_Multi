@@ -194,7 +194,8 @@ int L6470_rw_multi(union L6470_packet *pkt,int len, const char* msg, ...)
     //data = pkt->value8b;
 
     va_list args;
-    va_start(args,L6470_DEV_NUM * 3);
+    int size = L6470_DEV_NUM * 3;
+    va_start(args,size);
 
 #ifdef L6470_PRINT_MESSAGE
     union L6470_packet* send[L6470_DEV_NUM];
@@ -451,7 +452,7 @@ union L6470_packet L6470_makeCmd(struct L6470_CMD cmd, int orprm, uint32_t arg_p
 #if defined (L6470_PRINT_MESSAGE)
         printf("%s AbortCmd size_over cmdsize:2^%d, but arg is %d\n ",L6470_PRINT_HEADER, cmd.send_bit_size,arg_param);
 #endif
-        return;
+        return pkt;
     }
     if(0 == size){
 
