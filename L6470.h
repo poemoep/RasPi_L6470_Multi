@@ -12,9 +12,6 @@
 #include <stdint.h>
 #include <unistd.h>
 
-#include "L6470_user.h"
-
-
 //----define inline function----
 #define bit2byte(x) ( ( x + 8 - 1 ) / 8 ) 
 #define ustep(x)    ( ( x & 127) )
@@ -283,6 +280,9 @@ typedef enum{
 //#define REG_RESERVED_h1A    0x1A
 //#define REG_RESERVED_h1B    0x1B
 
+#include "L6470_user.h"
+
+
 //----define L6470 registers for functions----
 #define CMD_NOP           0b00000000
 #define CMD_SETPARAM      0b00000000
@@ -354,6 +354,8 @@ typedef enum{
 
 #define SPI_BPW   (8)
 #define SPI_DELAY (0)
+
+
 
 //----define struct/union----
 struct L6470_CMD{
