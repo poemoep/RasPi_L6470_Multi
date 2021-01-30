@@ -95,8 +95,8 @@ static L6470_packet generate_pkt(int enum_param,int32_t val);
 static L6470_packet generate_pkt_with_percentage(int enum_param, int32_t percentage);
 
 typedef struct{
-    L6470_packet * gen_func(int32_t).
-    int32_t param
+    L6470_packet * gen_func(int32_t);
+    int32_t param;
 } fp_array[PARAM_NUM] = {
    /* [enum_L6470_ABS_POS   ] = */{ gen_ABS_POS   ,     USER_ABS_POS  },
    /* [enum_L6470_EL_POS    ] = */{ gen_EL_POS    ,     USER_EL_POS   },
