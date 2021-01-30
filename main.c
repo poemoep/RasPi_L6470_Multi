@@ -15,8 +15,9 @@ int main(int argc, char** argv)
     int pos_aim,pos;
     L6470_packet pkt_r = L6470_MoveRun(DIR_FWD,25000000);
     L6470_packet pkt_l = pkt_r;
-
-    pos = L6470_GetAbsPos();
+    char c = 0;
+    c = get_char();
+    // pos = L6470_GetAbsPos();
     L6470_rw_multi(&pkt_r,4,NULL,&pkt_l,4,NULL);
     sleep(5);
     pos = L6470_GetAbsPos();
