@@ -144,41 +144,44 @@ void L6470_setting_init(void)
 
     for(int itr = 0; itr < L6470_DEV_NUM; itr++)
     {
-            // printf("malloc\n");
         L6470_setting[itr] = (L6470_packet*)malloc((PARAM_NUM) * sizeof(L6470_packet));
+    }
 
-        for (int enum_param = 0; enum_param < (PARAM_NUM); enum_param++)
-        {
-            // printf("%d\n",enum_param);
+    for (int enum_param = 0; enum_param < (PARAM_NUM); enum_param++)
+    {
+        // printf("%d\n",enum_param);
 
-            if(L6470_param[enum_param].rw == RESERVED){
-                continue;
-            }else if(L6470_param[enum_param].rw == READONLY){
-                // L6470_GetParam(itr, enum_param);
-            }else{
-                // printf("write %d\n",enum_param);
-                /* copy to buf from const */
-                // printf("exec genfunc\n");
-                L6470_packet pkt = fp_array[enum_param].gen_func(fp_array[enum_param].param);
-                // printf("copy pkt\n");
+        if(L6470_param[enum_param].rw == RESERVED){
+            continue;
+        }else if(L6470_param[enum_param].rw == READONLY){
+            // L6470_GetParam(itr, enum_param);
+        }else{
+            /* copy to buf from const */
+            L6470_packet pkt = fp_array[enum_param].gen_func(fp_array[enum_param].param);
+            char c = 0;
+            printf("%02x. %02x, %02x, %02x\n",pkt.value8b[0],pkt.value8b[1],pkt.value8b[2],pkt.value8b[3]);
+            c = getchar();
+         for(int itr = 0; itr < L6470_DEV_NUM; itr++)
+            {
                 L6470_setting[itr][enum_param] = pkt;
-                //make temp because wiringPiSPIDataRW rewrite send data
-                L6470_packet pkt_temp;
-                pkt_temp = pkt;
+            }       
+            //make temp because wiringPiSPIDataRW rewrite send data
+            L6470_packet pkt_temp;
+            pkt_temp = pkt;
 
-                // printf("check len\n");
-                int len, SPI_res = 0;
-                len = L6470_param[enum_param].param_size;
-    // #ifdef L6470_PRINT_MESSAGE
-    //             L6470_packet send = pkt;
-    // #endif
-                // printf("exec rw_all\n");
-                SPI_res = L6470_rw_all(&(pkt_temp), (int)(bit2byte(len + ADDR_SIZE)), NULL);
-    // #ifdef L6470_PRINT_MESSAGE
-    
-            }
+            // printf("check len\n");
+            int len, SPI_res = 0;
+            len = L6470_param[enum_param].param_size;
+// #ifdef L6470_PRINT_MESSAGE
+//             L6470_packet send = pkt;
+// #endif
+            // printf("exec rw_all\n");
+            SPI_res = L6470_rw_all(&(pkt_temp), (int)(bit2byte(len + ADDR_SIZE)), NULL);
+// #ifdef L6470_PRINT_MESSAGE
+
         }
     }
+    
 
 #ifdef L6470_PRINT_MESSAGE
     printf("%s setting_init end\n",L6470_PRINT_HEADER);
