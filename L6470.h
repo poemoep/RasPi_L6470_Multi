@@ -280,7 +280,6 @@ typedef enum{
 //#define REG_RESERVED_h1A    0x1A
 //#define REG_RESERVED_h1B    0x1B
 
-#include "L6470_user.h"
 
 
 //----define L6470 registers for functions----
@@ -355,8 +354,6 @@ typedef enum{
 #define SPI_BPW   (8)
 #define SPI_DELAY (0)
 
-
-
 //----define struct/union----
 typedef struct{
 	uint8_t self_num;
@@ -383,6 +380,8 @@ typedef union{
 }L6470_packet;
 
 extern L6470_packet *L6470_setting[L6470_DEV_NUM];
+
+#include "L6470_user.h"
 
 //----prottype declaration---
 void L6470_SPI_init(void);
