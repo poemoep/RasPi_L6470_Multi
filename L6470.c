@@ -22,6 +22,7 @@
 #define L6470_SPI_MODE SPI_MODE_3 // default
 
 #include "L6470.h"
+#include "L6470_const.h"
 #include "L6470_user.h"
 
 // uint8_t *REG_SIZE;

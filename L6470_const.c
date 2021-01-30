@@ -4,7 +4,7 @@
 /* =============================================                    */ 
 
 #include "L6470.h"
-
+#include "L6470_const.h"
 
 struct L6470_PARAM L6470_param[PARAM_NUM] =
 {
