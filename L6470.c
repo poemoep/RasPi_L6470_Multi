@@ -94,7 +94,7 @@ static void L6470_ExecCmd_NoArg( L6470_CMD cmd, const char* msg);
 static L6470_packet generate_pkt(int enum_param,int32_t val);
 static L6470_packet generate_pkt_with_percentage(int enum_param, int32_t percentage);
 
-typedef struct{
+struct{
     L6470_packet * gen_func(int32_t);
     int32_t param;
 } fp_array[PARAM_NUM] = {
