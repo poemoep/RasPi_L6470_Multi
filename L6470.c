@@ -155,20 +155,20 @@ void L6470_setting_init(void)
             }else{
                 /* copy to buf from const */
                 L6470_packet pkt = fp_array[enum_param].gen_func(fp_array[enum_param].param);
-    //             L6470_setting[enum_param] = L6470_user_setting[enum_param];
-    //             //make temp because wiringPiSPIDataRW rewrite send data
-    //             L6470_packet pkt_temp;
-    //             pkt_temp = L6470_user_setting[enum_param];
+                L6470_setting[enum_param] = pkt;
+                //make temp because wiringPiSPIDataRW rewrite send data
+                L6470_packet pkt_temp;
+                pkt_temp = pkt;
 
-    //             int len, SPI_res = 0;
-    //             len = L6470_param[enum_param].param_size;
-    // #ifdef L6470_PRINT_MESSAGE
-    //             L6470_packet send = L6470_user_setting[enum_param];
-    // #endif
-    //             SPI_res = L6470_rw(&(pkt_temp), (int)(bit2byte(len + ADDR_SIZE)), NULL);
-    // #ifdef L6470_PRINT_MESSAGE
-    //             L6470_debug_print("setting_init",&(send),&(pkt_temp));
-    // #endif
+                int len, SPI_res = 0;
+                len = L6470_param[enum_param].param_size;
+    #ifdef L6470_PRINT_MESSAGE
+                L6470_packet send = pkt;
+    #endif
+                SPI_res = L6470_rw_all(&(pkt_temp), (int)(bit2byte(len + ADDR_SIZE)), NULL);
+    #ifdef L6470_PRINT_MESSAGE
+                L6470_debug_print("setting_init",&(send),&(pkt_temp));
+    #endif
             }
         }
     }
@@ -223,6 +223,41 @@ int L6470_rw(L6470_packet *pkt,int len, const char* msg)
 #ifdef L6470_PRINT_MESSAGE
     L6470_debug_print(msg,&(send),pkt);
 #endif
+
+   return j; 
+}
+
+/* transmite same packet to all device */
+int L6470_rw_all(L6470_packet *pkt,int len, const char* msg)
+{
+    //uint8_t *data;
+    //data = pkt->value8b;
+
+    L6470_packet pkts[L6470_DEV_NUM] = {0};
+    for(int itr = 0; itr < L6470_DEV_NUM; itr++){
+        pkts[itr] = *pkt;
+    }
+
+    /* summlize packet */
+    uint8_t t_pkt[L6470_DEV_NUM*len] = {0};
+    for(int itr = 0; itr < L6470_DEV_NUM; itr++)
+        for(int pkt_num = 0; pkt_num < (len); pkt++)
+            t_pkt[itr + L6470_DEV_NUM*pkt_num] = pkts[itr]->value8b[pkt_num];
+    
+// #ifdef L6470_PRINT_MESSAGE
+//     L6470_packet send = *pkt;
+// #endif
+
+	int i = 0,j = 0;
+	for (i = 0; i<len; i++){
+	//	j += wiringPiSPIDataRW(L6470_SPI_CH, data,1);
+		j += wiringPiSPIDataRW(L6470_SPI_CH, (unsigned char *)(t_pkt + i*L6470_DEV_NUM),L6470_DEV_NUM);
+	//	data++;
+	}
+
+// #ifdef L6470_PRINT_MESSAGE
+//     L6470_debug_print(msg,&(send),pkt);
+// #endif
 
    return j; 
 }
@@ -612,7 +647,7 @@ L6470_packet gen_ABS_POS(int32_t abs_pos)
 {
 #if defined (L6470_PRINT_MESSAGE)
     if( (abs_pos > (int32_t)(pow(2,21)-1)) | (abs_pos < (int32_t)((-1)*pow(2,21))) ) 
-        printf("// %s %s abs_pos is over/under flow\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
+        printf(" %s %s abs_pos is over/under flow\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
 #endif
     int32_t val = abs_pos & (int32_t)(pow(2,21)-1);
     L6470_packet pkt = generate_pkt(enum_L6470_ABS_POS, val);
@@ -626,9 +661,9 @@ L6470_packet gen_EL_POS(int32_t step_u_step)
     int32_t u_step = (step_u_step & STEP_u_STEP_MASK);
 #if 0
 #if defined (L6470_PRINT_MESSAGE)
-    printf("// %s %s step is selected STEP_ePOS_%ddeg.\n",
+    printf(" %s %s step is selected STEP_ePOS_%ddeg.\n",
             L6470_PRINT_HEADER, L6470_PRINT_CAUTION, 90 * (step >> STEP_ePOS_ofset));
-    printf("// %s %s el_step is selected %d\n",L6470_PRINT_HEADER, L6470_PRINT_CAUTION, u_step));
+    printf(" %s %s el_step is selected %d\n",L6470_PRINT_HEADER, L6470_PRINT_CAUTION, u_step));
 #endif
 #endif
 
@@ -643,7 +678,7 @@ L6470_packet gen_MARK(int32_t mark)
 {
 #if defined (L6470_PRINT_MESSAGE)
     if( (mark > (int32_t)(pow(2,21)-1)) | (mark < (int32_t)((-1)*pow(2,21))) )
-        printf("// %s %s MARK is over/under flow\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
+        printf(" %s %s MARK is over/under flow\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
 #endif
     int32_t val = ( mark & (int32_t)(pow(2,21) - 1) );
     L6470_packet pkt = generate_pkt(enum_L6470_MARK, mark);
@@ -656,13 +691,13 @@ L6470_packet gen_ACC(int32_t step_per_ss)
     int32_t val = (int32_t)round((double)step_per_ss / ACC_RESOLUTION) ;
 #if defined (L6470_PRINT_MESSAGE)
     if(val == 0){
-        printf("// %s %s ACC step_per_ss is more than equal %d [x0.01 step/s^2]\n",
+        printf(" %s %s ACC step_per_ss is more than equal %d [x0.01 step/s^2]\n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, ACC_RESOLUTION);
-        printf("// %s %s set minumum value.\n",
+        printf(" %s %s set minumum value.\n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION);
         val = 1;
     } else if((int32_t)round((double)val * ACC_RESOLUTION) != step_per_ss){
-        printf("// %s %s ACC is rounded to %d [x0.01 step/s^2]\n",
+        printf(" %s %s ACC is rounded to %d [x0.01 step/s^2]\n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * ACC_RESOLUTION));
     } 
 #endif
@@ -677,12 +712,12 @@ L6470_packet gen_DEC(int32_t step_per_ss)
     int32_t val = (int32_t)round((double)step_per_ss / DEC_RESOLUTION);
 #if defined (L6470_PRINT_MESSAGE)
     if(val == 0){
-        printf("// %s %s DEC step_per_ss is more than equal %d [x0.01 step/s^2]\n",
+        printf(" %s %s DEC step_per_ss is more than equal %d [x0.01 step/s^2]\n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, DEC_RESOLUTION);
-        printf("// %s %s set minumum value.\n",L6470_PRINT_HEADER, L6470_PRINT_CAUTION);
+        printf(" %s %s set minumum value.\n",L6470_PRINT_HEADER, L6470_PRINT_CAUTION);
         val = 1;
     } else if((int32_t)round((double)val * DEC_RESOLUTION) != step_per_ss){
-        printf("// %s %s DEC is rounded to %d [x0.01 step/s^2]\n",
+        printf(" %s %s DEC is rounded to %d [x0.01 step/s^2]\n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * DEC_RESOLUTION));
     } 
 #endif
@@ -697,12 +732,12 @@ L6470_packet gen_MAX_SPEED(int32_t step_per_s)
     int32_t val = (int32_t)round(((double)step_per_s - MAX_SPEED_MIN) / MAX_SPEED_RESOLUTION);
 #if defined (L6470_PRINT_MESSAGE)
     if(val == 0){
-        printf("// %s %s MAX_SPEED is more than equal %d\n",
+        printf(" %s %s MAX_SPEED is more than equal %d\n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, MAX_SPEED_MIN);
-        printf("// %s %s set minumum value.\n",L6470_PRINT_HEADER, L6470_PRINT_CAUTION);
+        printf(" %s %s set minumum value.\n",L6470_PRINT_HEADER, L6470_PRINT_CAUTION);
         val = 0;
     } else if((int32_t)round((double)val * MAX_SPEED_RESOLUTION) != step_per_s){
-        printf("// %s %s MAX_SPEED is rounded to %d [x0.01 step/s]\n",
+        printf(" %s %s MAX_SPEED is rounded to %d [x0.01 step/s]\n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * MAX_SPEED_RESOLUTION));
     } 
 #endif
@@ -717,7 +752,7 @@ L6470_packet gen_MIN_SPEED(int32_t enable_LSPD_step_per_s)
     L6470_packet pkt = {0};
     if( 0 != (enable_LSPD_step_per_s & (0b01111110 << (ENABLE_LSPD_MAGIC)) ) ) {
 #if defined (L6470_PRINT_MESSAGE)
-        printf("// %s %s MIN_SPEED is over\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
+        printf(" %s %s MIN_SPEED is over\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
 #endif
     return pkt;
     } /*check 0b1111 1110 000~ */
@@ -729,7 +764,7 @@ L6470_packet gen_MIN_SPEED(int32_t enable_LSPD_step_per_s)
 
 #if defined (L6470_PRINT_MESSAGE)
     if((int32_t)round((double)val * MIN_SPEED_RESOLUTION) != step_per_s){
-        printf("// %s %s MIN_SPEED is rounded to %d [x0.001 step/s]\n",
+        printf(" %s %s MIN_SPEED is rounded to %d [x0.001 step/s]\n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * MIN_SPEED_RESOLUTION));
     } 
 #endif
@@ -773,7 +808,7 @@ L6470_packet gen_INT_SPEED(int32_t step_per_s)
     uint32_t val = (int32_t)round((double)step_per_s / INT_SPEED_RESOLUTION);
 #if defined (L6470_PRINT_MESSAGE)
     if((int32_t)round((double)val * INT_SPEED_RESOLUTION) != step_per_s){
-        printf("// %s %s INT_SPEED is rounded to %d [x0.0001 step/s] \n",
+        printf(" %s %s INT_SPEED is rounded to %d [x0.0001 step/s] \n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * INT_SPEED_RESOLUTION));
     } 
 #endif
@@ -788,7 +823,7 @@ L6470_packet gen_ST_SLP(int32_t slp)
     uint32_t val = (int32_t)round((double)slp / ST_SLP_RESOLUTION);
 #if defined (L6470_PRINT_MESSAGE)
     if((int32_t)round((double)val * ST_SLP_RESOLUTION) != slp){
-        printf("// %s %s ST_SLP is rounded to %d [x0.000001] \n",
+        printf(" %s %s ST_SLP is rounded to %d [x0.000001] \n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * ST_SLP_RESOLUTION));
     } 
 #endif
@@ -802,7 +837,7 @@ L6470_packet gen_FN_SLP_ACC(int32_t slp_acc)
     uint32_t val = (int32_t)round((double)slp_acc / FN_SLP_ACC_RESOLUTION);
 #if defined (L6470_PRINT_MESSAGE)
     if((int32_t)round((double)val * FN_SLP_ACC_RESOLUTION) != slp_acc){
-        printf("// %s %s FN_SLP_ACC is rounded to %d [x0.000001]\n",
+        printf(" %s %s FN_SLP_ACC is rounded to %d [x0.000001]\n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * FN_SLP_ACC_RESOLUTION));
     }
 #endif
@@ -816,7 +851,7 @@ L6470_packet gen_FN_SLP_DEC(int32_t slp_dec)
     uint32_t val = (int32_t)round((double)slp_dec / FN_SLP_DEC_RESOLUTION);
 #if defined (L6470_PRINT_MESSAGE)
     if((int32_t)round((double)val * FN_SLP_DEC_RESOLUTION) != slp_dec){
-        printf("// %s %s FN_SLP_DEC is rounded to %d [x0.000001]\n",
+        printf(" %s %s FN_SLP_DEC is rounded to %d [x0.000001]\n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * FN_SLP_DEC_RESOLUTION));
     } 
 #endif
@@ -830,7 +865,7 @@ L6470_packet gen_K_THERM(int32_t k_therm)
     int32_t val = (int32_t)round((double)(k_therm - K_THERM_MIN) / K_THERM_RESOLUTION);
 #if defined (L6470_PRINT_MESSAGE)
     if(((int32_t)round((double)val * K_THERM_RESOLUTION) + K_THERM_MIN) != k_therm){
-        printf("// %s %s K_THERM is rounded to %d [x0.00001]\n",
+        printf(" %s %s K_THERM is rounded to %d [x0.00001]\n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * K_THERM_RESOLUTION) + K_THERM_MIN);
     } 
 #endif
@@ -844,7 +879,7 @@ L6470_packet gen_OCD_TH(int32_t ocd_th)
     uint32_t val = (int32_t)round((double)(ocd_th - OCD_TH_RESOLUTION) / OCD_TH_RESOLUTION);
 #if defined (L6470_PRINT_MESSAGE)
     if(((int32_t)round((double)val * OCD_TH_RESOLUTION) + OCD_TH_RESOLUTION) != ocd_th){
-        printf("// %s %s OCD_TH is rounded to %d [mA]\n",
+        printf(" %s %s OCD_TH is rounded to %d [mA]\n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, ((int32_t)round((double)val * OCD_TH_RESOLUTION) + OCD_TH_RESOLUTION));
     } 
 #endif
@@ -858,7 +893,7 @@ L6470_packet gen_STALL_TH(int32_t stall_th)
     int32_t val = (int32_t)round((double)(stall_th - STALL_TH_RESOLUTION) / STALL_TH_RESOLUTION);
 #if defined (L6470_PRINT_MESSAGE)
     if(((int32_t)round((double)val * STALL_TH_RESOLUTION) + STALL_TH_RESOLUTION) != stall_th){
-        printf("// %s %s STALL_TH is rounded to %d [x0.01 mA]\n",
+        printf(" %s %s STALL_TH is rounded to %d [x0.01 mA]\n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, ((int32_t)round((double)val * STALL_TH_RESOLUTION) + STALL_TH_RESOLUTION));
     } 
 #endif    
@@ -871,7 +906,7 @@ L6470_packet gen_FS_SPD(int32_t fs_spd)
     uint32_t val = (int32_t)round((double)(fs_spd - FS_SPD_MIN) / FS_SPD_RESOLUTION);
 #if defined (L6470_PRINT_MESSAGE)
     if(((int32_t)round((double)val * FS_SPD_RESOLUTION) + FS_SPD_MIN) != fs_spd){
-        printf("// %s %s FS_SPD is rounded to %d [x0.01 step/s]\n",
+        printf(" %s %s FS_SPD is rounded to %d [x0.01 step/s]\n",
         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * FS_SPD_RESOLUTION) + FS_SPD_MIN);
     } 
 #endif   
@@ -888,7 +923,7 @@ L6470_packet gen_STEP_MODE(int32_t mode)
     uint8_t sync_sel = (mode & SYNC_SEL_MASK);
     uint8_t step_sel = (mode & STEP_SEL_MASK);
     if( (sync_sel >> SYNC_SEL_ofset) > step_sel)
-        printf("// %s %s sync_sel is less than equal step_sel.\n",L6470_PRINT_HEADER, L6470_PRINT_CAUTION);    
+        printf(" %s %s sync_sel is less than equal step_sel.\n",L6470_PRINT_HEADER, L6470_PRINT_CAUTION);    
 #endif
     int32_t val = mode;
     L6470_packet pkt = generate_pkt(enum_L6470_STEP_MODE, val);
@@ -952,7 +987,7 @@ static L6470_packet generate_pkt_with_percentage(int enum_param, int32_t percent
     if( (percentage < 0) | (10000 < percentage) )
     {
 #if defined (L6470_PRINT_MESSAGE)
-        printf("// %s %s percentage = 0 to 10000 [%%]\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
+        printf(" %s %s percentage = 0 to 10000 [%%]\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
 #endif
         return pkt; /* 0x00 pkt */  
     } /*0 to 10000*/
@@ -960,7 +995,7 @@ static L6470_packet generate_pkt_with_percentage(int enum_param, int32_t percent
     int32_t val = (int32_t)round((255 * (double)percentage) / 10000);
 #if defined (L6470_PRINT_MESSAGE)
     if((int32_t)round(((double)val * 10000) / 255) != percentage)
-        printf("// %s %s percentage is round to %d[0.01%%]\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION,(int32_t)round((val * 10000)/ 255));
+        printf(" %s %s percentage is round to %d[0.01%%]\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION,(int32_t)round((val * 10000)/ 255));
 #endif
     pkt = generate_pkt(enum_param,val);
     return pkt;
