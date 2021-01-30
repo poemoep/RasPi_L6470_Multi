@@ -199,20 +199,34 @@ int L6470_rw_multi(union L6470_packet *pkt,int len, const char* msg, ...)
     union L6470_packet send[L6470_DEV_NUM];
 #endif
 
-
-    uint8_t input_pkt[L6470_DEV_NUM*4] = {0};
+    union L6470_packet* input_pkt[L6470_DEV_NUM] = {0};
+    int input_len[L6470_DEV_NUM] = {0};
+    char* input_msg[L6470_DEV_NUM] = {0};
     int max_len = 0;
 
-
-    /* summarize pkts to uint8_t array */
+    /* change args to array for useful format */
     for(int itr = 0; itr < L6470_DEV_NUM; itr++)
     {
+        input_pkt[itr] = va_arg(args, union L6470_packet);
+        input_len[itr] = va_arg(args, int);
+        input_msg[itr] = va_arg(args, char*);
+    }
+
+    uint8_t trans_pkt[L6470_DEV_NUM*4] = {0};
+    /* summarize pkts to uint8_t array */
+    for(int itr = 0; itr < L6470_DEV_NUM); itr++){
+        /* get a pkt */
         for(int pkt_num = 0; pkt_num < 4; pkt_num++)
-            input_pkt[itr + (L6470_DEV_NUM * pkt_num)] = args[itr*3]->value8b[pkt_num];
-        if(max_len < args[itr*3 +1]) max_len = args[itr*3+1];
+            trans_pkt[itr + (L6470_DEV_NUM * pkt_num)] = input_pkt[itr]->value8b[pkt_num];
+
+        /* get a len */
+        if(max_len < input_len[itr]) max_len = input_len[itr];
+
+        /* get a msg */
+        input_msg[itr] = input_msg[itr];
 
 #ifdef L6470_PRINT_MESSAGE
-        send[itr] = args[itr*3];
+        send[itr] = *trans_pkt[itr];
 #endif
     }
 
@@ -224,7 +238,7 @@ int L6470_rw_multi(union L6470_packet *pkt,int len, const char* msg, ...)
 		// j += wiringPiSPIDataRW(L6470_SPI_CH, 
         //         (unsigned char *)(pkt->value8b + i),L6470_DEV_NUM);
         j += wiringPiSPIDataRW(L6470_SPI_CH,
-                (uint8_t *)(input_pkt + i*L6470_DEV_NUM), L6470_DEV_NUM);
+                (uint8_t *)(trans_pkt + i*L6470_DEV_NUM), L6470_DEV_NUM);
 
 	//	data++;
 	}
@@ -233,10 +247,10 @@ int L6470_rw_multi(union L6470_packet *pkt,int len, const char* msg, ...)
     for(int itr = 0; itr < L6470_DEV_NUM; itr++)
     {
         for(int pkt_num = 0; pkt_num < 4; pkt_num++)
-            args[itr*3]->value8b[pkt_num] = input_pkt[itr + (L6470_DEV_NUM * pkt_num)];
+            input_pkt[itr].value8b[pkt_num] = trans_pkt[itr + (L6470_DEV_NUM * pkt_num)];
 
 #ifdef L6470_PRINT_MESSAGE
-        L6470_debug_print(args[itr*3 + 2], send[itr], args[itr*3]);
+        L6470_debug_print(args[itr*3 + 2], send[itr], input_pkt[itr]);
 #endif
     }
 
@@ -247,7 +261,7 @@ int L6470_rw_multi(union L6470_packet *pkt,int len, const char* msg, ...)
 
     va_end(args);
 
-   return j; 
+    return j; 
 }
 
 union L6470_packet L6470_nop(int times)

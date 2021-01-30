@@ -380,7 +380,7 @@ union L6470_packet{
   uint32_t value32b;
 };
 
-extern union L6470_packet *L6470_setting;
+extern union L6470_packet *L6470_setting[L6470_DEV_NUM];
 extern struct L6470_PARAM L6470_param[PARAM_NUM];
 extern const struct L6470_CMD   L6470_cmd[CMD_NUM];
 
