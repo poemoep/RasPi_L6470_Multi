@@ -19,6 +19,8 @@
 /* ----define SPI slave setting----*/
 #define L6470_DEV_NUM (2)
 
+extern L6470_packet *L6470_setting[L6470_DEV_NUM];
+
 const L6470_packet L6470_user_setting[L6470_DEV_NUM][PARAM_NUM] =
 {
     {
