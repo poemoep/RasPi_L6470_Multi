@@ -9,7 +9,6 @@
 #ifndef __L6470_USER_HEADER__
 #define __L6470_USER_HEADER__
 
-
 #define L6470_SPI_CH 0  // 0 or 1
 #define SPI_SPEED 1000000 // [Hz]
 
@@ -17,7 +16,7 @@
 
 const union L6470_packet L6470_user_setting[L6470_DEV_NUM][PARAM_NUM] =
 {
-    [0] = {
+    {
     // L6470_PARAM_addr,     setting[2],setting[1],setting[0]} //reset_val
     //Left justified, MSB first
     {{REG_ABS_POS,       {0x00,   0x00,   0x00}}}, //0x000000
@@ -47,10 +46,11 @@ const union L6470_packet L6470_user_setting[L6470_DEV_NUM][PARAM_NUM] =
     {{REG_STATUS,        {0x00,   0x00,   0x00}}}//, //dummy
 //    {{REG_RESERVED_h1A,  {0x00,   0x00,   0x00}}}, //dummy
 //    {{REG_RESERVED_h1B,  {0x00,   0x00,   0x00}}}, //dummy
-    },
-
-
-    [1] = {
+    }
+}
+,
+{
+    {
     // L6470_PARAM_addr,     setting[2],setting[1],setting[0]} //reset_val
     //Left justified, MSB first
     {{REG_ABS_POS,       {0x00,   0x00,   0x00}}}, //0x000000
