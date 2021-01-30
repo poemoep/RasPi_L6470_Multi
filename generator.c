@@ -51,8 +51,8 @@ int main (int argc, char** argv)
         print_pkt(gen_CONFIG(USER_CONFIG));
 
         output_pktEnd();
-        if((L6470_DEV_NUM - 1) == i) printf(";");
-        else printf(",");
+        if((L6470_DEV_NUM - 1) == i) printf(";\n");
+        else printf(",\n");
     }
 
     output_footer();
@@ -72,7 +72,6 @@ static void output_header()
     printf("#ifndef __L6470_USER_HEADER__\n");
     printf("#define __L6470_USER_HEADER__\n");
     printf("\n");
-    printf("//#define L6470_DAISY_CHAIN\n");
     printf("#define L6470_SPI_CH 0  // 0 or 1\n");
     printf("#define SPI_SPEED 1000000 // [Hz]\n");
     printf("\n");
@@ -102,7 +101,7 @@ static void output_pktEnd()
 
 static void output_footer()
 {
-    printf(";\n\n");
+    printf("\n");
     printf("#endif\n");
 }
 
@@ -427,8 +426,7 @@ union L6470_packet gen_CONFIG(int32_t param)
 static union L6470_packet generate_pkt(int enum_param,int32_t val)
 {
     union L6470_packet pkt = {0};
-    // pkt.data.reg_addr = L6470_param[enum_param].addr;
-    pkt.data.reg_addr = ;
+    pkt.data.reg_addr = L6470_param[enum_param].addr;
 
     int size = L6470_param[enum_param].param_size;
 

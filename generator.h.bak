@@ -8,6 +8,12 @@
 #ifndef __GENERATOR_H__
 #define __GENERATOR_H__
 
+/* daisy cain device num */
+#define L6470_DEV_NUM       (2) 
+
+
+/* All parametors are generated same value. */
+
 /* ABS_POS = -2097152 to 2097151 (-2^21 ~ +2^21-1) [step]*/
 #define USER_ABS_POS		(20000)
 
