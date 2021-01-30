@@ -427,7 +427,8 @@ union L6470_packet gen_CONFIG(int32_t param)
 static union L6470_packet generate_pkt(int enum_param,int32_t val)
 {
     union L6470_packet pkt = {0};
-    pkt.data.reg_addr = L6470_param[enum_param].addr;
+    // pkt.data.reg_addr = L6470_param[enum_param].addr;
+    pkt.data.reg_addr = ;
 
     int size = L6470_param[enum_param].param_size;
 
