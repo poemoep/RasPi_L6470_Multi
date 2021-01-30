@@ -158,17 +158,21 @@ void L6470_setting_init(void)
             }else{
                 printf("write %d\n",enum_param);
                 /* copy to buf from const */
+                printf("exec genfunc\n");
                 L6470_packet pkt = fp_array[enum_param].gen_func(fp_array[enum_param].param);
+                printf("copy pkt\n");
                 L6470_setting[itr][enum_param] = pkt;
                 //make temp because wiringPiSPIDataRW rewrite send data
                 L6470_packet pkt_temp;
                 pkt_temp = pkt;
 
+                printf("check len\n");
                 int len, SPI_res = 0;
                 len = L6470_param[enum_param].param_size;
     // #ifdef L6470_PRINT_MESSAGE
     //             L6470_packet send = pkt;
     // #endif
+                printf("exec rw_all\n");
                 SPI_res = L6470_rw_all(&(pkt_temp), (int)(bit2byte(len + ADDR_SIZE)), NULL);
     // #ifdef L6470_PRINT_MESSAGE
     //             L6470_debug_print("setting_init",&(send),&(pkt_temp));
