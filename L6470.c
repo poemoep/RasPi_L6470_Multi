@@ -263,9 +263,9 @@ int L6470_rw_all(L6470_packet *pkt,int len, const char* msg)
 	int i = 0,j = 0;
 	for (i = 0; i<len; i++){
 	//	j += wiringPiSPIDataRW(L6470_SPI_CH, data,1);
-        printf("transmit: %02x, ", t_pkt);
+        printf("transmit: %02x, %02x, ", t_pkt[i*L6470_DEV_NUM], t_pkt[i*L6470_DEV_NUM + 1]);
 		j += wiringPiSPIDataRW(L6470_SPI_CH, (unsigned char *)(t_pkt + i*L6470_DEV_NUM),L6470_DEV_NUM);
-        printf("Receive:  %02x\n ", t_pkt);
+        printf("Receive:  %02x, %02x\n", t_pkt[i*L6470_DEV_NUM], t_pkt[i*L6470_DEV_NUM + 1]);
 	//	data++;
 	}
 
