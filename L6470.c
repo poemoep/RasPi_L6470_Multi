@@ -241,6 +241,7 @@ int L6470_rw_all(L6470_packet *pkt,int len, const char* msg)
     //uint8_t *data;
     //data = pkt->value8b;
 
+    printf("copy pkt\n");
     L6470_packet pkts[L6470_DEV_NUM] = {0};
     for(int itr = 0; itr < L6470_DEV_NUM; itr++){
         pkts[itr] = *pkt;
@@ -248,15 +249,18 @@ int L6470_rw_all(L6470_packet *pkt,int len, const char* msg)
 
     /* summlize packet */
     // uint8_t t_pkt[L6470_DEV_NUM*len] = {0};
+    printf("summlize pkt\n");
     uint8_t t_pkt[L6470_DEV_NUM*len];
-    for(int itr = 0; itr < L6470_DEV_NUM; itr++)
-        for(int pkt_num = 0; pkt_num < (len); pkt++)
+    for(int itr = 0; itr < L6470_DEV_NUM; itr++){
+        for(int pkt_num = 0; pkt_num < (len); pkt++){
             t_pkt[itr + L6470_DEV_NUM*pkt_num] = (pkts[itr]).value8b[pkt_num];
-    
+        }
+    }    
 // #ifdef L6470_PRINT_MESSAGE
 //     L6470_packet send = *pkt;
 // #endif
 
+    printf("transmite pkt\n");
 	int i = 0,j = 0;
 	for (i = 0; i<len; i++){
 	//	j += wiringPiSPIDataRW(L6470_SPI_CH, data,1);
