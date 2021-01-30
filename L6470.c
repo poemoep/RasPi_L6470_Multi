@@ -148,11 +148,14 @@ void L6470_setting_init(void)
 
         for (int enum_param = 0; enum_param < (PARAM_NUM); enum_param++)
         {
+            printf("%d",enum_param);
+
             if(L6470_param[enum_param].rw == RESERVED){
                 continue;
             }else if(L6470_param[enum_param].rw == READONLY){
                 // L6470_GetParam(itr, enum_param);
             }else{
+                printf("write ",enum_param);
                 /* copy to buf from const */
                 L6470_packet pkt = fp_array[enum_param].gen_func(fp_array[enum_param].param);
                 L6470_setting[itr][enum_param] = pkt;
@@ -162,13 +165,13 @@ void L6470_setting_init(void)
 
                 int len, SPI_res = 0;
                 len = L6470_param[enum_param].param_size;
-    #ifdef L6470_PRINT_MESSAGE
-                L6470_packet send = pkt;
-    #endif
+    // #ifdef L6470_PRINT_MESSAGE
+    //             L6470_packet send = pkt;
+    // #endif
                 SPI_res = L6470_rw_all(&(pkt_temp), (int)(bit2byte(len + ADDR_SIZE)), NULL);
-    #ifdef L6470_PRINT_MESSAGE
-                L6470_debug_print("setting_init",&(send),&(pkt_temp));
-    #endif
+    // #ifdef L6470_PRINT_MESSAGE
+    //             L6470_debug_print("setting_init",&(send),&(pkt_temp));
+    // #endif
             }
         }
     }
