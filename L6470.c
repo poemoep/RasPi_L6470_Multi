@@ -243,7 +243,7 @@ int L6470_rw_all(L6470_packet *pkt,int len, const char* msg)
     uint8_t t_pkt[L6470_DEV_NUM*len];
     for(int itr = 0; itr < L6470_DEV_NUM; itr++)
         for(int pkt_num = 0; pkt_num < (len); pkt++)
-            t_pkt[itr + L6470_DEV_NUM*pkt_num] = pkts[itr]->value8b[pkt_num];
+            t_pkt[itr + L6470_DEV_NUM*pkt_num] = (pkts[itr]).value8b[pkt_num];
     
 // #ifdef L6470_PRINT_MESSAGE
 //     L6470_packet send = *pkt;
