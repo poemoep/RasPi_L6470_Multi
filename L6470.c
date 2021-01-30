@@ -174,9 +174,8 @@ void L6470_setting_init(void)
     // #endif
                 // printf("exec rw_all\n");
                 SPI_res = L6470_rw_all(&(pkt_temp), (int)(bit2byte(len + ADDR_SIZE)), NULL);
-    #ifdef L6470_PRINT_MESSAGE
-                L6470_debug_print("setting_init",&(send),&(pkt_temp));
-    #endif
+    // #ifdef L6470_PRINT_MESSAGE
+    
             }
         }
     }
