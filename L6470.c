@@ -207,14 +207,14 @@ int L6470_rw_multi(union L6470_packet *pkt,int len, const char* msg, ...)
     /* change args to array for useful format */
     for(int itr = 0; itr < L6470_DEV_NUM; itr++)
     {
-        input_pkt[itr] = va_arg(args, union L6470_packet);
+        input_pkt[itr] = va_arg(args, union L6470_packet *);
         input_len[itr] = va_arg(args, int);
-        input_msg[itr] = va_arg(args, char*);
+        input_msg[itr] = va_arg(args, char *);
     }
 
     uint8_t trans_pkt[L6470_DEV_NUM*4] = {0};
     /* summarize pkts to uint8_t array */
-    for(int itr = 0; itr < L6470_DEV_NUM); itr++){
+    for(int itr = 0; itr < L6470_DEV_NUM; itr++){
         /* get a pkt */
         for(int pkt_num = 0; pkt_num < 4; pkt_num++)
             trans_pkt[itr + (L6470_DEV_NUM * pkt_num)] = input_pkt[itr]->value8b[pkt_num];
@@ -247,10 +247,10 @@ int L6470_rw_multi(union L6470_packet *pkt,int len, const char* msg, ...)
     for(int itr = 0; itr < L6470_DEV_NUM; itr++)
     {
         for(int pkt_num = 0; pkt_num < 4; pkt_num++)
-            input_pkt[itr].value8b[pkt_num] = trans_pkt[itr + (L6470_DEV_NUM * pkt_num)];
+            input_pkt[itr]->value8b[pkt_num] = trans_pkt[itr + (L6470_DEV_NUM * pkt_num)];
 
 #ifdef L6470_PRINT_MESSAGE
-        L6470_debug_print(args[itr*3 + 2], send[itr], input_pkt[itr]);
+        L6470_debug_print(input_msg[itr], send[itr], input_pkt[itr]);
 #endif
     }
 
