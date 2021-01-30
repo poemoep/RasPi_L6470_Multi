@@ -31,8 +31,8 @@ L6470_packet *L6470_setting[L6470_DEV_NUM];
 static uint32_t spiSpeeds [2];
 static int 	spiFds [2];
 
-extern  L6470_PARAM L6470_param[PARAM_NUM];
-extern const L6470_CMD L6470_cmd[CMD_NUM];
+// extern  L6470_PARAM L6470_param[PARAM_NUM];
+// extern const L6470_CMD L6470_cmd[CMD_NUM];
 
 // const  L6470_PARAM L6470_param[PARAM_NUM] =
 // {

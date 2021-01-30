@@ -1,4 +1,4 @@
-#ifdef __L6470_CONST__
+#ifndef __L6470_CONST__
 #define __L6470_CONST__
 #include "L6470.h"
 

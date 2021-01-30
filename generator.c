@@ -79,7 +79,7 @@ static void output_header()
     printf("#define L6470_DEV_NUM (%d)\n",L6470_DEV_NUM);
     // printf("#endif\n");
     printf("\n");
-    printf("const L6470_packet L6470_user_setting[L6470_DEV_NUM][PARAM_NUM] =\n");
+    printf("const L6470_packet [L6470_DEV_NUM][PARAM_NUM] =\n");
 }
 
 static void output_pktStart()
