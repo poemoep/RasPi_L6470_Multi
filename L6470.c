@@ -27,7 +27,6 @@
 // uint8_t *REG_SIZE;
 union L6470_packet *L6470_setting;
 
-
 static uint32_t spiSpeeds [2];
 static int 	spiFds [2];
 
@@ -88,6 +87,7 @@ extern const struct L6470_CMD L6470_cmd[CMD_NUM];
 // {  enum_L6470_GETSTATUS,      CMD_GETSTATUS,      CMD_SIZE_GETSTATUS}
 // };
 
+union L6470_packet L6470_makeCmd(struct L6470_CMD cmd, int orprm, uint32_t arg_param);
 static void L6470_ExecCmd(struct L6470_CMD cmd, int orprm, uint32_t arg_param,const char* msg);
 static void L6470_ExecCmd_NoArg(struct L6470_CMD cmd, const char* msg);
 
@@ -185,16 +185,80 @@ int L6470_rw(union L6470_packet *pkt,int len, const char* msg)
    return j; 
 }
 
-void L6470_nop(int times)
+int L6470_rw_multi(union L6470_packet *pkt,int len, const char* msg, ...)
 {
-    union L6470_packet pkt = {0};
-    int SPI_res = 0;
-    int size = L6470_cmd[enum_L6470_NOP].send_bit_size;
+    //uint8_t *data;
+    //data = pkt->value8b;
 
-    L6470_rw(&(pkt),times, "NOP");
+
+    va_start(args,L6470_DEV_NUM * 3);
+
+#ifdef L6470_PRINT_MESSAGE
+    union L6470_packet send[L6470_DEV_NUM];
+#endif
+
+
+    uint8_t input_pkt[L6470_DEV_NUM*4] = {0};
+    int max_len = 0;
+
+
+    /* summarize pkts to uint8_t array */
+    for(int itr = 0; itr < L6470_DEV_NUM; itr++)
+    {
+        for(int pkt_num = 0; pkt_num < 4; pkt_num++)
+            input_pkt[itr + (L6470_DEV_NUM * pkt_num)] = args[itr*3]->value8b[pkt_num];
+        if(max_len < args[itr*3 +1]) max_len = args[itr*3+1];
+
+#ifdef L6470_PRINT_MESSAGE
+        send[itr] = args[itr*3];
+#endif
+    }
+
+    /*  transmission all packets */
+	int i = 0,j = 0;
+	for (i = 0; i<max_len; i++){
+
+	//	j += wiringPiSPIDataRW(L6470_SPI_CH, data,1);
+		// j += wiringPiSPIDataRW(L6470_SPI_CH, 
+        //         (unsigned char *)(pkt->value8b + i),L6470_DEV_NUM);
+        j += wiringPiSPIDataRW(L6470_SPI_CH,
+                (uint8_t *)(input_pkt + i*L6470_DEV_NUM), L6470_DEV_NUM);
+
+	//	data++;
+	}
+
+    /* distribute packets to original pointer */
+    for(int itr = 0; itr < L6470_DEV_NUM; itr++)
+    {
+        for(int pkt_num = 0; pkt_num < 4; pkt_num++)
+            args[itr*3]->value8b[pkt_num] = input_pkt[itr + (L6470_DEV_NUM * pkt_num)];
+
+#ifdef L6470_PRINT_MESSAGE
+        L6470_debug_print(args[itr*3 + 2], send[itr], args[itr*3]);
+#endif
+    }
+
+
+// #ifdef L6470_PRINT_MESSAGE
+//     L6470_debug_print(msg,&(send),pkt);
+// #endif
+
+    va_end(args);
+
+   return j; 
 }
 
-void L6470_SetParam(int enum_param, uint32_t value)
+union L6470_packet L6470_nop(int times)
+{
+    union L6470_packet pkt = {0};
+    // int SPI_res = 0;
+    // int size = L6470_cmd[enum_L6470_NOP].send_bit_size;
+
+    // L6470_rw(&(pkt),times, "NOP");
+    return pkt;
+}
+
+union L6470_packet L6470_SetParam(int enum_param, uint32_t value)
 {
     union L6470_packet pkt;
     int SPI_res = 0;
@@ -213,11 +277,12 @@ void L6470_SetParam(int enum_param, uint32_t value)
         pkt.value8b[3] = (value & 0x0000FF);
     }
     
-    SPI_res = L6470_rw(&(pkt),bit2byte(size + ADDR_SIZE), "SetParam");
+    // SPI_res = L6470_rw(&(pkt),bit2byte(size + ADDR_SIZE), "SetParam");
 
+    return pkt;
 }
 
-int32_t L6470_GetParam(int enum_param)
+union L6470_packet L6470_GetParam(int enum_param)
 {
     union L6470_packet pkt={0};
     int SPI_res = 0;
@@ -226,25 +291,25 @@ int32_t L6470_GetParam(int enum_param)
     int size = L6470_cmd[enum_L6470_GETPARAM].send_bit_size;
     pkt.data.reg_addr = (L6470_param[enum_param].addr | L6470_cmd[enum_L6470_GETPARAM].addr);
 
-    SPI_res = L6470_rw(&(pkt),bit2byte(size + ADDR_SIZE),"GetParam");
+    // SPI_res = L6470_rw(&(pkt),bit2byte(size + ADDR_SIZE),"GetParam");
 
-    //rewrite addr
-    pkt.data.reg_addr = L6470_param[enum_param].addr;
-    L6470_setting[enum_param] = pkt;
+    /* rewrite addr */
+    // pkt.data.reg_addr = L6470_param[enum_param].addr;
+    // L6470_setting[enum_param] = pkt;
 
 
-    if(8 >= size){
-        ret = (pkt.value8b[1]);
-    }else if (16 >= size){
-        ret = (pkt.value8b[1] << 8) + (pkt.value8b[2]);
-    }else{
-        ret = (pkt.value8b[1] << 16) + (pkt.value8b[2] << 8) + (pkt.value8b[3]);
-    }
+    // if(8 >= size){
+    //     ret = (pkt.value8b[1]);
+    // }else if (16 >= size){
+    //     ret = (pkt.value8b[1] << 8) + (pkt.value8b[2]);
+    // }else{
+    //     ret = (pkt.value8b[1] << 16) + (pkt.value8b[2] << 8) + (pkt.value8b[3]);
+    // }
 
     return ret;
 }
 /*speed = 0 to 15625000 [x0.001 step/s] */
-void L6470_MoveRun(uint8_t dir, uint32_t speed)
+union L6470_packet L6470_MoveRun(uint8_t dir, uint32_t speed)
 {
     int32_t speed_val = (int32_t)round((double)speed / SPEED_RESOLUTION);
 #if defined (L6470_PRINT_MESSAGE)
@@ -258,32 +323,37 @@ void L6470_MoveRun(uint8_t dir, uint32_t speed)
         printf("%s %s speed is over MAX_SPEED. rounded to %d [x0.001 step/s]\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION, max_speed);
 
 #endif
-    L6470_ExecCmd(L6470_cmd[enum_L6470_MoveRun],dir,speed_val, "MoveCont");
+    // L6470_ExecCmd(L6470_cmd[enum_L6470_MoveRun],dir,speed_val, "MoveCont");
+    return L6470_makeCmd(L6470_cmd[enum_L6470_MoveRun],dir,speed_val);
 }
 /* dir = DIR_FWD or DIR_RVS */
-void L6470_MoveStepClock(uint8_t dir)
+union L6470_packet L6470_MoveStepClock(uint8_t dir)
 {
-    L6470_ExecCmd(L6470_cmd[enum_L6470_MOVESTEPCLOCK],dir,0, "MoveStepClock");
+    // L6470_ExecCmd(L6470_cmd[enum_L6470_MOVESTEPCLOCK],dir,0, "MoveStepClock");
+    return L6470_makeCmd((L6470_cmd[enum_L6470_MOVESTEPCLOCK],dir,0);
 }
 /* step = 0 to 4194303(2^22) [step] */
-void L6470_MoveStep(uint8_t dir,uint32_t step)
+union L6470_packet L6470_MoveStep(uint8_t dir,uint32_t step)
 {
     L6470_ExecCmd(L6470_cmd[enum_L6470_MOVESTEP],dir,step, "MoveStep");
+    return L6470_makeCmd(L6470_cmd[enum_L6470_MOVESTEP],dir,step);
 }
 /* abs_pos = -2^21 to 2^21 -1 [step]*/
-void L6470_MoveGoTo(int32_t abs_pos)
+union L6470_packet L6470_MoveGoTo(int32_t abs_pos)
 {
-    L6470_ExecCmd(L6470_cmd[enum_L6470_MOVEGOTO],0,abs_pos, "MoveGoTo");
+    // L6470_ExecCmd(L6470_cmd[enum_L6470_MOVEGOTO],0,abs_pos, "MoveGoTo");
+    return L6470_makeCmd(L6470_cmd[enum_L6470_MOVEGOTO],0,abs_pos);
 }
 /* dir = DIR_FWD or DIR_RVS, abs_pos = -2^21 to 2^21-1 [step] */
-void L6470_MoveGoToDir(uint8_t dir,int32_t abs_pos)
+union L6470_packet L6470_MoveGoToDir(uint8_t dir,int32_t abs_pos)
 {
-    L6470_ExecCmd(L6470_cmd[enum_L6470_MOVEGOTODIR],dir,abs_pos,"MoveGoToDir");
+    // L6470_ExecCmd(L6470_cmd[enum_L6470_MOVEGOTODIR],dir,abs_pos,"MoveGoToDir");
+    return L6470_makeCmd(L6470_cmd[enum_L6470_MOVEGOTODIR],dir,abs_pos);
 }
 /* act = ACT_POS_CLEAR or ACT_POS_TO_MARK */
 /* dir = DIR_FWD or DIR_RVS */
 /*speed = 0 to 15625000 [x0.001 step/s] */
-void L6470_MoveGoToUntil(uint8_t act, uint8_t dir,uint32_t speed)
+union L6470_packet L6470_MoveGoToUntil(uint8_t act, uint8_t dir,uint32_t speed)
 {
     int32_t speed_val = (int32_t)round((double)speed / SPEED_RESOLUTION);
 #if defined (L6470_PRINT_MESSAGE)
@@ -291,56 +361,95 @@ void L6470_MoveGoToUntil(uint8_t act, uint8_t dir,uint32_t speed)
         printf("%s %s speed is rounded to %d [x0.001 step/s]\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION, (speed_val) * SPEED_RESOLUTION);
 #endif
 
-    L6470_ExecCmd(L6470_cmd[enum_L6470_MOVEGOTOUNTIL],act|dir,speed_val, "MoveGoToUntil");
+    // L6470_ExecCmd(L6470_cmd[enum_L6470_MOVEGOTOUNTIL],act|dir,speed_val, "MoveGoToUntil");
+    return L6470_makeCmd(L6470_cmd[enum_L6470_MOVEGOTOUNTIL],act|dir,speed_val);
 }
 
 /* act = ACT_POS_CLEAR or ACT_POS_TO_MARK */
 /* dir = DIR_FWD or DIR_RVS */
-void L6470_MoveRelease(uint8_t act, uint8_t dir)
+union L6470_packet L6470_MoveRelease(uint8_t act, uint8_t dir)
 {
-    L6470_ExecCmd(L6470_cmd[enum_L6470_MOVERELEASE],act|dir,0,"MoveRelease");
+    // L6470_ExecCmd(L6470_cmd[enum_L6470_MOVERELEASE],act|dir,0,"MoveRelease");
+    return L6470_makeCmd(L6470_cmd[enum_L6470_MOVERELEASE],act|dir,0);
 }
 
-void L6470_GoHome(void)
+union L6470_packet L6470_GoHome(void)
 {
-    L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_GOHOME], "GoHome");
-
+    // L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_GOHOME], "GoHome");
+    return L6470_makeCmd(L6470_cmd[enum_L6470_GOHOME], 0, 0);
 }
 
-void L6470_GoMark(void)
+union L6470_packet L6470_GoMark(void)
 {
-    L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_GOMARK], "GoMark");
+    // L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_GOMARK], "GoMark");
+    return L6470_makeCmd(L6470_cmd[enum_L6470_GOMARK], 0, 0);
 }
 
-void L6470_ResetPos(void)
+union L6470_packet L6470_ResetPos(void)
 {
-    L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_RESETPOS], "ResetPos");
-
+    // L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_RESETPOS], "ResetPos");
+    return L6470_makeCmd(L6470_cmd[enum_L6470_RESETPOS], 0, 0);
 }
 
-void L6470_ResetDevice(void)
+union L6470_packet L6470_ResetDevice(void)
 {
-    L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_RESETDEVICE],"ResetDevice");
+    // L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_RESETDEVICE],"ResetDevice");
+    return L6470_makeCmd(L6470_cmd[enum_L6470_RESETDEVICE], 0, 0);
 }
 
-void L6470_StopSoft(void)
+union L6470_packet L6470_StopSoft(void)
 {
-    L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_STOPSOFT], "StopSoft");
+    // L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_STOPSOFT], "StopSoft");
+    return L6470_makeCmd(L6470_cmd[enum_L6470_STOPSOFT], 0, 0);
 }
 
-void L6470_StopHard(void)
+union L6470_packet L6470_StopHard(void)
 {
-    L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_STOPHARD], "StopHard");
+    // L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_STOPHARD], "StopHard");
+    return L6470_makeCmd(L6470_cmd[enum_L6470_STOPHARD], 0, 0);
 }
 
-void L6470_HiZSoft(void)
+union L6470_packet L6470_HiZSoft(void)
 {
-    L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_HIZSOFT],"HiZSoft");
+    // L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_HIZSOFT],"HiZSoft");
+    return L6470_makeCmd(L6470_cmd[enum_L6470_HIZSOFT], 0, 0);
 }
 
-void L6470_HiZHard(void)
+union L6470_packet L6470_HiZHard(void)
 {
-    L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_HIZHARD],"HIZHard");
+    // L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_HIZHARD],"HIZHard");
+    return L6470_makeCmd(L6470_cmd[enum_L6470_HIZHARD], 0, 0);
+}
+
+union L6470_packet L6470_makeCmd(struct L6470_CMD cmd, int orprm, uint32_t arg_param)
+{
+    union L6470_packet pkt={0};
+    // int SPI_res = 0;
+
+    int size = cmd.send_bit_size;
+    pkt.data.reg_addr = (cmd.addr | orprm);
+    if(pow(2,cmd.send_bit_size) < abs(arg_param))
+    {
+#if defined (L6470_PRINT_MESSAGE)
+        printf("%s AbortCmd size_over cmdsize:2^%d, but arg is %d\n ",L6470_PRINT_HEADER, cmd.send_bit_size,arg_param);
+#endif
+        return;
+    }
+    if(0 == size){
+
+    }else if(8 >= size){
+        pkt.data.value8b[0] = ((arg_param & 0x0000FF));
+    }else if (16 >= size){
+        pkt.data.value8b[0] = ((arg_param & 0x00FF00) >> 8);
+        pkt.data.value8b[1] = ((arg_param & 0x0000FF));
+    }else{
+        pkt.data.value8b[0] = ((arg_param & 0xFF0000) >> 16);
+        pkt.data.value8b[1] = ((arg_param & 0x00FF00) >> 8);
+        pkt.data.value8b[2] = ((arg_param & 0x0000FF));
+    }
+
+    return pkt;
+    // SPI_res = L6470_rw(&(pkt),bit2byte(size + ADDR_SIZE),msg);
 }
 
 static void L6470_ExecCmd(struct L6470_CMD cmd, int orprm, uint32_t arg_param,const char* msg)
