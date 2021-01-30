@@ -194,8 +194,7 @@ int L6470_rw_multi(union L6470_packet *pkt,int len, const char* msg, ...)
     //data = pkt->value8b;
 
     va_list args;
-    int size = L6470_DEV_NUM * 3;
-    va_start(args,size);
+    va_start(args,L6470_DEV_NUM * 3);
 
 #ifdef L6470_PRINT_MESSAGE
     union L6470_packet* send[L6470_DEV_NUM];

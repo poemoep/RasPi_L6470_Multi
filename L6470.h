@@ -193,7 +193,7 @@
 //----define L6470 parametor as userful number----
 
 typedef enum {
-  enum_L6470_ABS_POS ,
+  enum_L6470_ABS_POS=0 ,
   enum_L6470_EL_POS ,
   enum_L6470_MARK,
   enum_L6470_SPEED, //readonly
