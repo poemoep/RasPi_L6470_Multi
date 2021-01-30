@@ -155,7 +155,7 @@ void L6470_setting_init(void)
             }else{
                 /* copy to buf from const */
                 L6470_packet pkt = fp_array[enum_param].gen_func(fp_array[enum_param].param);
-                L6470_setting[enum_param] = pkt;
+                L6470_setting[itr][enum_param] = pkt;
                 //make temp because wiringPiSPIDataRW rewrite send data
                 L6470_packet pkt_temp;
                 pkt_temp = pkt;
@@ -239,7 +239,8 @@ int L6470_rw_all(L6470_packet *pkt,int len, const char* msg)
     }
 
     /* summlize packet */
-    uint8_t t_pkt[L6470_DEV_NUM*len] = {0};
+    // uint8_t t_pkt[L6470_DEV_NUM*len] = {0};
+    uint8_t t_pkt[L6470_DEV_NUM*len];
     for(int itr = 0; itr < L6470_DEV_NUM; itr++)
         for(int pkt_num = 0; pkt_num < (len); pkt++)
             t_pkt[itr + L6470_DEV_NUM*pkt_num] = pkts[itr]->value8b[pkt_num];
