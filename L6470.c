@@ -144,18 +144,19 @@ void L6470_setting_init(void)
 
     for(int itr = 0; itr < L6470_DEV_NUM; itr++)
     {
+            printf("malloc\n");
         L6470_setting[itr] = (L6470_packet*)malloc((PARAM_NUM) * sizeof(L6470_packet));
 
         for (int enum_param = 0; enum_param < (PARAM_NUM); enum_param++)
         {
-            printf("%d",enum_param);
+            printf("%d\n",enum_param);
 
             if(L6470_param[enum_param].rw == RESERVED){
                 continue;
             }else if(L6470_param[enum_param].rw == READONLY){
                 // L6470_GetParam(itr, enum_param);
             }else{
-                printf("write ",enum_param);
+                printf("write %d\n",enum_param);
                 /* copy to buf from const */
                 L6470_packet pkt = fp_array[enum_param].gen_func(fp_array[enum_param].param);
                 L6470_setting[itr][enum_param] = pkt;
