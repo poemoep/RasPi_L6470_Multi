@@ -197,7 +197,7 @@ int L6470_rw_multi(union L6470_packet *pkt,int len, const char* msg, ...)
     va_start(args,L6470_DEV_NUM * 3);
 
 #ifdef L6470_PRINT_MESSAGE
-    union L6470_packet send[L6470_DEV_NUM];
+    union L6470_packet* send[L6470_DEV_NUM];
 #endif
 
     union L6470_packet* input_pkt[L6470_DEV_NUM] = {0};
@@ -323,7 +323,8 @@ union L6470_packet L6470_GetParam(int enum_param)
     //     ret = (pkt.value8b[1] << 16) + (pkt.value8b[2] << 8) + (pkt.value8b[3]);
     // }
 
-    return ret;
+    // return ret;
+    return pkt;
 }
 /*speed = 0 to 15625000 [x0.001 step/s] */
 union L6470_packet L6470_MoveRun(uint8_t dir, uint32_t speed)
