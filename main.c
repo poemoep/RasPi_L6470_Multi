@@ -15,7 +15,7 @@ int main(int argc, char** argv)
     int pos_aim,pos;
 
     pos = L6470_GetAbsPos();
-    L6470_rw_multi(L6470_MoveRun(DIR_FWD, 2560000),L6470_cmd[enum_L6470_MoveRun].len + 1,NULL,L6470_MoveRun(DIR_FWD, 2560000),L6470_cmd[enum_L6470_MoveRun].len + 1,NULL);
+    L6470_rw_multi(L6470_MoveRun(DIR_FWD, 2560000),L6470_cmd[enum_L6470_MoveRun].send_bit_size + 1,NULL,L6470_MoveRun(DIR_FWD, 2560000),L6470_cmd[enum_L6470_MoveRun].send_bit_size + 1,NULL);
     sleep(5);
     pos = L6470_GetAbsPos();
     L6470_MoveRun(DIR_FWD, 5120000);
