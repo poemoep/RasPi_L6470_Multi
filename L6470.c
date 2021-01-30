@@ -31,10 +31,10 @@ L6470_packet *L6470_setting[L6470_DEV_NUM];
 static uint32_t spiSpeeds [2];
 static int 	spiFds [2];
 
-extern struct L6470_PARAM L6470_param[PARAM_NUM];
-extern const struct L6470_CMD L6470_cmd[CMD_NUM];
+extern  L6470_PARAM L6470_param[PARAM_NUM];
+extern const  L6470_CMD L6470_cmd[CMD_NUM];
 
-// const struct L6470_PARAM L6470_param[PARAM_NUM] =
+// const  L6470_PARAM L6470_param[PARAM_NUM] =
 // {
 // { enum_L6470_ABS_POS      , REG_ABS_POS,      REG_SIZE_ABS_POS,       READONLY | WRITABLE_MStop },
 // { enum_L6470_EL_POS       , REG_EL_POS ,      REG_SIZE_EL_POS ,       READONLY | WRITABLE_MStop},
@@ -65,7 +65,7 @@ extern const struct L6470_CMD L6470_cmd[CMD_NUM];
 // //{ enum_L6470_RESERVED_h1B , REG_RESERVED_h1B, REG_SIZE_RESERVED_h1B,  RESERVED }  //dummy
 // };
 
-// const struct L6470_CMD L6470_cmd[CMD_NUM] =
+// const  L6470_CMD L6470_cmd[CMD_NUM] =
 // {	
 // {  enum_L6470_NOP,            CMD_NOP,            CMD_SIZE_NOP},
 // {  enum_L6470_SETPARAM,       CMD_SETPARAM,       CMD_SIZE_SETPARAM},
@@ -88,9 +88,9 @@ extern const struct L6470_CMD L6470_cmd[CMD_NUM];
 // {  enum_L6470_GETSTATUS,      CMD_GETSTATUS,      CMD_SIZE_GETSTATUS}
 // };
 
-L6470_packet L6470_makeCmd(struct L6470_CMD cmd, int orprm, uint32_t arg_param);
-static void L6470_ExecCmd(struct L6470_CMD cmd, int orprm, uint32_t arg_param,const char* msg);
-static void L6470_ExecCmd_NoArg(struct L6470_CMD cmd, const char* msg);
+L6470_packet L6470_makeCmd( L6470_CMD cmd, int orprm, uint32_t arg_param);
+static void L6470_ExecCmd( L6470_CMD cmd, int orprm, uint32_t arg_param,const char* msg);
+static void L6470_ExecCmd_NoArg( L6470_CMD cmd, const char* msg);
 
 
 #if defined (L6470_PRINT_MESSAGE)
@@ -439,7 +439,7 @@ L6470_packet L6470_HiZHard(void)
     return L6470_makeCmd(L6470_cmd[enum_L6470_HIZHARD], 0, 0);
 }
 
-L6470_packet L6470_makeCmd(struct L6470_CMD cmd, int orprm, uint32_t arg_param)
+L6470_packet L6470_makeCmd( L6470_CMD cmd, int orprm, uint32_t arg_param)
 {
     L6470_packet pkt={0};
     // int SPI_res = 0;
@@ -470,7 +470,7 @@ L6470_packet L6470_makeCmd(struct L6470_CMD cmd, int orprm, uint32_t arg_param)
     // SPI_res = L6470_rw(&(pkt),bit2byte(size + ADDR_SIZE),msg);
 }
 
-static void L6470_ExecCmd(struct L6470_CMD cmd, int orprm, uint32_t arg_param,const char* msg)
+static void L6470_ExecCmd( L6470_CMD cmd, int orprm, uint32_t arg_param,const char* msg)
 {
     L6470_packet pkt={0};
     int SPI_res = 0;
@@ -498,7 +498,7 @@ static void L6470_ExecCmd(struct L6470_CMD cmd, int orprm, uint32_t arg_param,co
     SPI_res = L6470_rw(&(pkt),bit2byte(size + ADDR_SIZE),msg);
 }
 
-static void L6470_ExecCmd_NoArg(struct L6470_CMD cmd, const char* msg)
+static void L6470_ExecCmd_NoArg( L6470_CMD cmd, const char* msg)
 {
     L6470_packet pkt={0};
     int SPI_res = 0;
