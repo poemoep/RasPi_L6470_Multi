@@ -17,7 +17,7 @@ int main(int argc, char** argv)
     L6470_packet pkt_l = pkt_r;
 
     pos = L6470_GetAbsPos();
-    L6470_rw_multi(&pkt_r,L6470_cmd[enum_L6470_MoveRun].send_bit_size + 1,NULL,&pkt_l,L6470_cmd[enum_L6470_MoveRun].send_bit_size + 1,NULL);
+    L6470_rw_multi(&pkt_r,4,NULL,&pkt_l,4,NULL);
     sleep(5);
     pos = L6470_GetAbsPos();
     L6470_MoveRun(DIR_FWD, 5120000);

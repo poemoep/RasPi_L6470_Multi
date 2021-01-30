@@ -334,7 +334,7 @@ typedef enum{
 #define CMD_SIZE_NOP              (1 ) // test
 #define CMD_SIZE_SETPARAM         (24) //MAX
 #define CMD_SIZE_GETPARAM         (24) //MAX
-#define CMD_SIZE_MOVECONT         (20)
+#define CMD_SIZE_MOVERUN          (20)
 #define CMD_SIZE_MOVESTEPCLOCK    (0 )
 #define CMD_SIZE_MOVESTEP         (22)  
 #define CMD_SIZE_MOVEGOTO         (22)
