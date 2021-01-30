@@ -5,7 +5,7 @@
 
 #include <stdio.h>
 #include <math.h>
-// #include "L6470.h"
+#include "L6470.h"
 #include "generator.h"
 
 static void output_header(void);
@@ -20,7 +20,8 @@ int main (int argc, char** argv)
 {
     output_header();
 
-    for(int i = 0; i < L6470_DEV_NUM; i++){
+    for(int i = 0; i < L6470_DEV_NUM; i++)
+    {
 
         output_pktStart();
 
@@ -50,14 +51,8 @@ int main (int argc, char** argv)
         print_pkt(gen_CONFIG(USER_CONFIG));
 
         output_pktEnd();
-        if((L6470_DEV_NUM - 1) == i)
-        {
-            printf(";");
-        }else
-        {
-            printf(",");
-        }
-        
+        if((L6470_DEV_NUM - 1) == i) printf(";");
+        else printf(",");
     }
 
     output_footer();
@@ -109,7 +104,6 @@ static void output_footer()
 {
     printf(";\n\n");
     printf("#endif\n");
-
 }
 
 
