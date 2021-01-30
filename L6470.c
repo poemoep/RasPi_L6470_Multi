@@ -23,7 +23,7 @@
 
 #include "L6470.h"
 #include "L6470_const.h"
-#include "L6470_user.h"
+// #include "L6470_user.h"
 
 // uint8_t *REG_SIZE;
 L6470_packet *L6470_setting[L6470_DEV_NUM];
