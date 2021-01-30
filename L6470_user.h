@@ -19,7 +19,7 @@
 /* ----define SPI slave setting----*/
 #define L6470_DEV_NUM (2)
 
-const L6470_packet L6470_user_setting[L6470_DEV_NUM][PARAM_NUM] =
+const union L6470_packet L6470_user_setting[L6470_DEV_NUM][PARAM_NUM] =
 {
     {
     // L6470_PARAM_addr,     setting[2],setting[1],setting[0]} //reset_val
