@@ -298,8 +298,14 @@ int L6470_rw_multi(L6470_packet *pkt,int len, const char* msg, ...)
     int max_len = 0;
 
     printf("args to array\n");
+
+    input_pkt[0] = pkt;
+    input_len[0] = len;
+    input_msg[0] = msg;
+
+
     /* change args to array for useful format */
-    for(int itr = 0; itr < L6470_DEV_NUM; itr++)
+    for(int itr = 1; itr < L6470_DEV_NUM; itr++)
     {
         
         input_pkt[itr] = va_arg(args, L6470_packet *);
