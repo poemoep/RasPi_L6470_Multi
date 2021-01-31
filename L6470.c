@@ -313,6 +313,7 @@ int L6470_rw_multi(L6470_packet *pkt,int len, const char* msg, ...)
         /* get a pkt */
         for(int pkt_num = 0; pkt_num < 4; pkt_num++){
             printf("summarize pkts itr=%d, pkt_num=%d\n",itr,pkt_num);
+            printf("[itr + num*pkt_num] = %d, input_pkt[itr]->value8b[pkt_num] = %02x\n",(itr + L6470_DEV_NUM*pkt_num), input_pkt[itr]->value8b[pkt_num]);
             trans_pkt[itr + (L6470_DEV_NUM * pkt_num)] = input_pkt[itr]->value8b[pkt_num];
         }
             
