@@ -307,9 +307,9 @@ int L6470_rw_multi(L6470_packet *pkt,int len, const char* msg, ...)
         input_msg[itr] = va_arg(args, char *);
 
         printf("%02x, %02x, %02x, %02x\n",
-                                    input_pkt[itr]->value8b[0]
-                                    input_pkt[itr]->value8b[1]
-                                    input_pkt[itr]->value8b[2]
+                                    input_pkt[itr]->value8b[0],
+                                    input_pkt[itr]->value8b[1],
+                                    input_pkt[itr]->value8b[2],
                                     input_pkt[itr]->value8b[3]
                                     );
     }
