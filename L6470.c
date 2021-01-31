@@ -311,14 +311,16 @@ int L6470_rw_multi(L6470_packet *pkt,int len, const char* msg, ...)
     /* summarize pkts to uint8_t array */
     for(int itr = 0; itr < L6470_DEV_NUM; itr++){
         /* get a pkt */
-        for(int pkt_num = 0; pkt_num < 4; pkt_num++)
+        for(int pkt_num = 0; pkt_num < 4; pkt_num++){
+            printf("summarize pkts itr=%d, pkt_num=%d\n"itr,pkt_num);
             trans_pkt[itr + (L6470_DEV_NUM * pkt_num)] = input_pkt[itr]->value8b[pkt_num];
-
+        }
+            
         /* get a len */
         if(max_len < input_len[itr]) max_len = input_len[itr];
 
-        /* get a msg */
-        input_msg[itr] = input_msg[itr];
+        // /* get a msg */
+        // input_msg[itr] = input_msg[itr];
 
 #ifdef L6470_PRINT_MESSAGE
         send[itr] = input_pkt[itr];
