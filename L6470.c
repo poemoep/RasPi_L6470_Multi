@@ -317,12 +317,14 @@ int L6470_rw_multi(L6470_packet *pkt,int len, const char* msg, ...)
         }
             
         /* get a len */
+        printf("len check itr=%d\n",itr);
         if(max_len < input_len[itr]) max_len = input_len[itr];
 
         // /* get a msg */
         // input_msg[itr] = input_msg[itr];
 
 #ifdef L6470_PRINT_MESSAGE
+        printf("copy for send itr=%d\n",itr);
         send[itr] = input_pkt[itr];
 #endif
     }
