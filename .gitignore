@@ -2,4 +2,4 @@
 *.o
 main
 gen
-
+remove/*
