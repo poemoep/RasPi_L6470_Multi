@@ -88,7 +88,7 @@ const  L6470_CMD L6470_cmd[CMD_NUM] =
     {  enum_L6470_GETSTATUS,      CMD_GETSTATUS,      CMD_SIZE_GETSTATUS    }
 };
 
-L6470_u_packet L6470_makeCmd( L6470_CMD cmd, int orprm, uint32_t arg_param);
+L6470_DATA_T L6470_makeCmd( L6470_CMD cmd, int orprm, uint32_t arg_param);
 static void L6470_ExecCmd( L6470_CMD cmd, int orprm, uint32_t arg_param,const char* msg);
 static void L6470_ExecCmd_NoArg( L6470_CMD cmd, const char* msg);
 static L6470_u_packet generate_pkt(int enum_param,int32_t val);
@@ -315,7 +315,7 @@ int L6470_rw_multi(L6470_DATA_ARRAY* datum, const char * msg)
         }
 
 #ifdef L6470_PRINT_MESSAGE
-        L6470_debug_print(msg,&(send.dev[itr].pkt),&(datum->dev[itr].pkt]);
+        L6470_debug_print(msg,&(send.dev[itr].pkt),&(datum->dev[itr].pkt));
 #endif
     }
 
@@ -436,7 +436,7 @@ L6470_DATA_T L6470_nop(int times)
 
     // L6470_rw(&(pkt),times, "NOP");
     data.enum_prm = enum_L6470_NOP;
-    data.pkt = ;
+    data.pkt = pkt;
     data.s_byte = times;
 
     return data;
@@ -465,7 +465,7 @@ L6470_DATA_T L6470_SetParam(int enum_param, uint32_t value)
     // SPI_res = L6470_rw(&(pkt),bit2byte(size + ADDR_SIZE), "SetParam");
     data.s_byte = bit2byte(size) + 1;
     data.enum_prm = enum_param;
-    data.pkt = pkt:
+    data.pkt = pkt;
 
     return data;
 }
@@ -512,11 +512,15 @@ L6470_DATA_T L6470_MoveRun(uint8_t dir, uint32_t speed)
     int32_t temp_speed = (int32_t)round((double)speed_val * SPEED_RESOLUTION);
     if( temp_speed != speed)
         printf("%s %s speed is rounded to %d [x0.001 step/s]\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION, temp_speed);
-    L6470_u_packet temp = L6470_setting[enum_L6470_MAX_SPEED];
-    int32_t max_speed = (temp.data.value8b[0] << 8) + (temp.data.value8b[1]);
-    max_speed = max_speed * MAX_SPEED_RESOLUTION * 10; /* 10times MAX_SPEDD [x0.01 step/s] / SPEED [x0.001 step/s] */ 
-    if( temp_speed > max_speed )
-        printf("%s %s speed is over MAX_SPEED. rounded to %d [x0.001 step/s]\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION, max_speed);
+    
+    for(int itr = 0; itr < L6470_DEV_NUM; itr++){
+        L6470_u_packet temp = L6470_setting[itr][enum_L6470_MAX_SPEED];
+        int32_t max_speed = (temp.data.value8b[0] << 8) + (temp.data.value8b[1]);
+        max_speed = max_speed * MAX_SPEED_RESOLUTION * 10; /* 10times MAX_SPEDD [x0.01 step/s] / SPEED [x0.001 step/s] */ 
+        if( temp_speed > max_speed )
+            printf("%s %s speed is over MAX_SPEED(Dev %d). rounded to %d [x0.001 step/s]\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION, itr,max_speed);
+
+    }
 
 #endif
     // L6470_ExecCmd(L6470_cmd[enum_L6470_MoveRun],dir,speed_val, "MoveCont");
