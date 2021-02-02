@@ -34,7 +34,7 @@ static int 	spiFds [2];
 // extern  L6470_PARAM L6470_param[PARAM_NUM];
 // extern const L6470_CMD L6470_cmd[CMD_NUM];
 
-const  L6470_PARAM fGetL6470_param[PARAM_NUM] =
+const  L6470_PARAM L6470_param[PARAM_NUM] =
 {
     { enum_L6470_ABS_POS      , REG_ABS_POS,      REG_SIZE_ABS_POS,       READONLY | WRITABLE_MStop },
     { enum_L6470_EL_POS       , REG_EL_POS ,      REG_SIZE_EL_POS ,       READONLY | WRITABLE_MStop },
@@ -752,7 +752,7 @@ L6470_STATUS_T L6470_GetStatus(void)
     L6470_DATA_ARRAY d_ary;
     L6470_DATA_T data;
     L6470_u_packet pkt = {0};
-    
+
     int size = L6470_cmd[enum_L6470_GETSTATUS].send_bit_size;
     pkt.data.reg_addr = L6470_cmd[enum_L6470_GETSTATUS].addr;
 
