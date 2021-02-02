@@ -218,29 +218,29 @@ void L6470_init(void)
 #endif
 }
 
-int L6470_rw(L6470_u_packet *pkt,int len, const char* msg)
-{
-    //uint8_t *data;
-    //data = pkt->value8b;
+// int L6470_rw(L6470_DATA_T *data,int len, const char* msg)
+// {
+//     //uint8_t *data;
+//     //data = pkt->value8b;
 
-#ifdef L6470_PRINT_MESSAGE
-    L6470_u_packet send = *pkt;
-#endif
+// #ifdef L6470_PRINT_MESSAGE
+//     L6470_DATA_T send = *data;
+// #endif
 
 
-	int i = 0,j = 0;
-	for (i = 0; i<len; i++){
-	//	j += wiringPiSPIDataRW(L6470_SPI_CH, data,1);
-		j += wiringPiSPIDataRW(L6470_SPI_CH, (unsigned char *)(pkt->value8b + i),1);
-	//	data++;
-	}
+// 	int i = 0,j = 0;
+// 	for (i = 0; i<len; i++){
+// 	//	j += wiringPiSPIDataRW(L6470_SPI_CH, data,1);
+// 		j += wiringPiSPIDataRW(L6470_SPI_CH, (unsigned char *)(pkt->value8b + i),1);
+// 	//	data++;
+// 	}
 
-#ifdef L6470_PRINT_MESSAGE
-    L6470_debug_print(msg,&(send),pkt);
-#endif
+// #ifdef L6470_PRINT_MESSAGE
+//     L6470_debug_print(msg,&(send),pkt);
+// #endif
 
-   return j; 
-}
+//    return j; 
+// }
 
 /* transmite same packet to all device */
 int L6470_rw_all(L6470_DATA_ARRAY datum, const char* msg)
