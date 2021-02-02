@@ -1,6 +1,6 @@
 #include "L6470_user.h"
 
-const L6470_packet L6470_user_setting[L6470_DEV_NUM][PARAM_NUM] =
+const L6470_u_packet L6470_user_setting[L6470_DEV_NUM][PARAM_NUM] =
 {
     {
     // L6470_PARAM_addr,     setting[2],setting[1],setting[0]} //reset_val

@@ -371,14 +371,19 @@ typedef struct{
 typedef struct{
   uint8_t reg_addr;
   uint8_t value8b[3];
-}L6470_Data;
-
-typedef union{
-  L6470_Data data;
-  uint8_t value8b[4];
-  uint32_t value32b;
 }L6470_packet;
 
+typedef union{
+  L6470_packet data;
+  uint8_t value8b[4];
+  uint32_t value32b;
+}L6470_u_packet;
+
+typedef struct{
+  enum_L6470_PARAM enum_prm;
+  uint8_t s_byte;
+  L6470_u_packet pkt;
+}L6470_DATA_T;
 
 extern const  L6470_CMD L6470_cmd[CMD_NUM];
 extern const  L6470_PARAM L6470_param[PARAM_NUM];
@@ -387,29 +392,29 @@ void L6470_SPI_init(void);
 void L6470_reg_size_init(void);
 void L6470_setting_init(void);
 void L6470_init(void);
-int  L6470_rw(L6470_packet *pkt,int len,const char* msg);
-int  L6470_rw_all(L6470_packet *pkt,int len, const char* msg);
-int  L6470_rw_multi(L6470_packet *pkt,int len, const char* msg, ...);
-L6470_packet L6470_nop(int times);
-L6470_packet L6470_SetParam(int enum_param,uint32_t value);
-L6470_packet L6470_GetParam(int param);
-L6470_packet L6470_MoveRun(uint8_t dir,uint32_t value);
-L6470_packet L6470_MoveStepClock(uint8_t dir);
-L6470_packet L6470_MoveStep(uint8_t dir, uint32_t step);
-L6470_packet L6470_MoveGoTo(int32_t abs_pos);
-L6470_packet L6470_MoveGoToDir(uint8_t dir, int32_t abs_pos);
-L6470_packet L6470_MoveGoToUntil(uint8_t act, uint8_t dir,uint32_t speed);
-L6470_packet L6470_MoveRelease(uint8_t act, uint8_t dir);
-L6470_packet L6470_GoHome(void);
-L6470_packet L6470_GoMark(void);
-L6470_packet L6470_ResetPos(void);
-L6470_packet L6470_ResetDevice(void);
-L6470_packet L6470_StopSoft(void);
-L6470_packet L6470_StopHard(void);
-L6470_packet L6470_HiZSoft(void);
-L6470_packet L6470_HiZHard(void);
-int32_t L6470_GetAbsPos(void);
-uint16_t L6470_GetStatus(void);
+int  L6470_rw(L6470_DATA_T *data,const char* msg);
+int  L6470_rw_all(L6470_DATA_ARRAY *datum, const char* msg);
+int  L6470_rw_multi(L6470_DATA_ARRAY *datum, const char* msg, ...);
+L6470_DATA_T L6470_nop(int times);
+L6470_DATA_T L6470_SetParam(int enum_param,uint32_t value);
+L6470_DATA_T L6470_GetParam(int param);
+L6470_DATA_T L6470_MoveRun(uint8_t dir,uint32_t value);
+L6470_DATA_T L6470_MoveStepClock(uint8_t dir);
+L6470_DATA_T L6470_MoveStep(uint8_t dir, uint32_t step);
+L6470_DATA_T L6470_MoveGoTo(int32_t abs_pos);
+L6470_DATA_T L6470_MoveGoToDir(uint8_t dir, int32_t abs_pos);
+L6470_DATA_T L6470_MoveGoToUntil(uint8_t act, uint8_t dir,uint32_t speed);
+L6470_DATA_T L6470_MoveRelease(uint8_t act, uint8_t dir);
+L6470_DATA_T L6470_GoHome(void);
+L6470_DATA_T L6470_GoMark(void);
+L6470_DATA_T L6470_ResetPos(void);
+L6470_DATA_T L6470_ResetDevice(void);
+L6470_DATA_T L6470_StopSoft(void);
+L6470_DATA_T L6470_StopHard(void);
+L6470_DATA_T L6470_HiZSoft(void);
+L6470_DATA_T L6470_HiZHard(void);
+L6470_ABSPOS_T L6470_GetAbsPos(void);
+L6470_STATUS_T L6470_GetStatus(void);
 
 #endif
 

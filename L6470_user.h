@@ -112,32 +112,49 @@
 #define L6470_PRINT_CAUTION "Caution"
 #endif
 
-extern L6470_packet *L6470_setting[L6470_DEV_NUM];
+extern L6470_u_packet *L6470_setting[L6470_DEV_NUM];
+
+typedef struct{
+  int32_t dev[L6470_DEV_NUM];
+}L6470_ABSPOS_T;
+
+typedef struct{
+    int16_t dev[L6470_DEV_NUM];
+}L6470_STATUS_T;
+
+typedef union{
+    L6470_u_packet dev[L6470_DEV_NUM];
+    uint8_t b[L6470_DEV_NUM*4];
+}L6470_u_packet_array;
+
+typedef struct{
+  L6470_DATA_T dev[L6470_DEV_NUM];
+}L6470_DATA_ARRAY;
 
 /* prototype */
 
-L6470_packet gen_ABS_POS(int32_t abs_pos);
-L6470_packet gen_EL_POS(int32_t step_el_step);
-L6470_packet gen_MARK(int32_t mark);
-L6470_packet gen_ACC(int32_t step_per_ss);
-L6470_packet gen_DEC(int32_t step_per_ss);
-L6470_packet gen_MAX_SPEED(int32_t step_per_s);
-L6470_packet gen_MIN_SPEED(int32_t enable_LSPD_step_per_s);
-L6470_packet gen_KVAL_HOLD(int32_t percentage);
-L6470_packet gen_KVAL_RUN(int32_t percentage);
-L6470_packet gen_KVAL_ACC(int32_t percentage);
-L6470_packet gen_KVAL_DEC(int32_t percentage);
-L6470_packet gen_INT_SPEED(int32_t step_per_s);
-L6470_packet gen_ST_SLP(int32_t slp);
-L6470_packet gen_FN_SLP_ACC(int32_t slp_acc);
-L6470_packet gen_FN_SLP_DEC(int32_t slp_dec);
-L6470_packet gen_K_THERM(int32_t k_therm);
-L6470_packet gen_OCD_TH(int32_t ocd_th);
-L6470_packet gen_STALL_TH(int32_t stall_th);
-L6470_packet gen_FS_SPD(int32_t fs_spd);
-L6470_packet gen_STEP_MODE(int32_t sync_en_sync_sel_step_sel);
-L6470_packet gen_ALARM_EN(int32_t alm);
-L6470_packet gen_CONFIG(int32_t param);
+L6470_u_packet gen_ABS_POS(int32_t abs_pos);
+L6470_u_packet gen_EL_POS(int32_t step_el_step);
+L6470_u_packet gen_MARK(int32_t mark);
+L6470_u_packet gen_ACC(int32_t step_per_ss);
+L6470_u_packet gen_DEC(int32_t step_per_ss);
+L6470_u_packet gen_MAX_SPEED(int32_t step_per_s);
+L6470_u_packet gen_MIN_SPEED(int32_t enable_LSPD_step_per_s);
+L6470_u_packet gen_KVAL_HOLD(int32_t percentage);
+L6470_u_packet gen_KVAL_RUN(int32_t percentage);
+L6470_u_packet gen_KVAL_ACC(int32_t percentage);
+L6470_u_packet gen_KVAL_DEC(int32_t percentage);
+L6470_u_packet gen_INT_SPEED(int32_t step_per_s);
+L6470_u_packet gen_ST_SLP(int32_t slp);
+L6470_u_packet gen_FN_SLP_ACC(int32_t slp_acc);
+L6470_u_packet gen_FN_SLP_DEC(int32_t slp_dec);
+L6470_u_packet gen_K_THERM(int32_t k_therm);
+L6470_u_packet gen_OCD_TH(int32_t ocd_th);
+L6470_u_packet gen_STALL_TH(int32_t stall_th);
+L6470_u_packet gen_FS_SPD(int32_t fs_spd);
+L6470_u_packet gen_STEP_MODE(int32_t sync_en_sync_sel_step_sel);
+L6470_u_packet gen_ALARM_EN(int32_t alm);
+L6470_u_packet gen_CONFIG(int32_t param);
 
 
 
