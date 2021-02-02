@@ -58,17 +58,17 @@ int main(int argc, char** argv)
     
     
     d.dev[0] = L6470_MoveStepClock(DIR_FWD);
-    d.dev[1] = L6470_nop(1);
+    d.dev[1] = L6470_HiZSoft();
     c = getchar();
-    L6470_rw_multi(&d, "MoveStepClock_nop");
+    L6470_rw_multi(&d, "MoveStepClock_HiZSoft");
     c = getchar();
     sleep(3);
     pos = L6470_GetAbsPos();
 
-    d.dev[0] = L6470_nop(1);
+    d.dev[0] = L6470_HiZSoft();
     d.dev[1] = L6470_MoveStepClock(DIR_RVS);
     c = getchar();
-    L6470_rw_multi(&d, "nop_MoveStepClock");
+    L6470_rw_multi(&d, "HiZSoft_MoveStepClock");
     c = getchar();
     sleep(3);
     pos = L6470_GetAbsPos();
@@ -157,10 +157,13 @@ int main(int argc, char** argv)
         for(int itr = 0; itr <L6470_DEV_NUM; itr++){
     	    mark[itr][0] = mark[itr][1];
 	        mark[itr][1] = pos.dev[itr];
+            printf("Dev %d, mark[0] = %d, mark[1] = %d\n",itr, mark[0],mark[1]);
 
             if(mark[itr][0] == mark[itr][1]){
+                printf("Dev %d, SW pushed",itr);
                 flag++;
             }else{
+                printf("Dev %d, SW  no pushed yet",itr);
                 flag = 0;
             }
         }
