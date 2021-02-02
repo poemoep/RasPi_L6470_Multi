@@ -34,7 +34,7 @@ static int 	spiFds [2];
 // extern  L6470_PARAM L6470_param[PARAM_NUM];
 // extern const L6470_CMD L6470_cmd[CMD_NUM];
 
-const  L6470_PARAM L6470_param[PARAM_NUM] =
+const  L6470_PARAM fGetL6470_param[PARAM_NUM] =
 {
     { enum_L6470_ABS_POS      , REG_ABS_POS,      REG_SIZE_ABS_POS,       READONLY | WRITABLE_MStop },
     { enum_L6470_EL_POS       , REG_EL_POS ,      REG_SIZE_EL_POS ,       READONLY | WRITABLE_MStop },
@@ -426,23 +426,30 @@ int L6470_rw_multi(L6470_DATA_ARRAY* datum, const char * msg)
 //     return j; 
 // }
 
-L6470_u_packet L6470_nop(int times)
+/* times = 0 to 4 */
+L6470_DATA_T L6470_nop(int times)
 {
+    L6470_DATA_T data;
     L6470_u_packet pkt = {0};
     // int SPI_res = 0;
     // int size = L6470_cmd[enum_L6470_NOP].send_bit_size;
 
     // L6470_rw(&(pkt),times, "NOP");
-    return pkt;
+    data.enum_prm = enum_L6470_NOP;
+    data.pkt = ;
+    data.s_byte = times;
+
+    return data;
 }
 
-L6470_u_packet L6470_SetParam(int enum_param, uint32_t value)
+L6470_DATA_T L6470_SetParam(int enum_param, uint32_t value)
 {
-    L6470_u_packet pkt;
-    int SPI_res = 0;
+    L6470_DATA_T data;
+    L6470_u_packet pkt = {0};
+    // int SPI_res = 0;
     int size = L6470_param[enum_param].param_size;
     
-    pkt.data.reg_addr = (L6470_param[enum_param].addr | L6470_cmd[enum_L6470_SETPARAM].addr);
+    pkt.value8b[0] = (L6470_param[enum_param].addr | L6470_cmd[enum_L6470_SETPARAM].addr);
 
     if(8 >= size){
         pkt.value8b[1] = ((value & 0xFF));
@@ -452,21 +459,25 @@ L6470_u_packet L6470_SetParam(int enum_param, uint32_t value)
     }else{
         pkt.value8b[1] = ((value & 0xFF0000) >> 16);
         pkt.value8b[2] = ((value & 0x00FF00) >> 8);
-        pkt.value8b[3] = (value & 0x0000FF);
+        pkt.value8b[3] =  (value & 0x0000FF);
     }
     
     // SPI_res = L6470_rw(&(pkt),bit2byte(size + ADDR_SIZE), "SetParam");
+    data.s_byte = bit2byte(size) + 1;
+    data.enum_prm = enum_param;
+    data.pkt = pkt:
 
-    return pkt;
+    return data;
 }
 
-L6470_u_packet L6470_GetParam(int enum_param)
+L6470_DATA_T L6470_GetParam(int enum_param)
 {
+    L6470_DATA_T data;
     L6470_u_packet pkt={0};
     int SPI_res = 0;
     int32_t ret = 100;
 
-    int size = L6470_cmd[enum_L6470_GETPARAM].send_bit_size;
+    int size = L6470_param[enum_param].param_size;
     pkt.data.reg_addr = (L6470_param[enum_param].addr | L6470_cmd[enum_L6470_GETPARAM].addr);
 
     // SPI_res = L6470_rw(&(pkt),bit2byte(size + ADDR_SIZE),"GetParam");
@@ -485,55 +496,65 @@ L6470_u_packet L6470_GetParam(int enum_param)
     // }
 
     // return ret;
-    return pkt;
+
+    data.s_byte = bit2byte(size) + 1;
+    data.enum_prm = enum_param;
+    data.pkt = pkt:
+    return data;
 }
 
 /*speed = 0 to 15625000 [x0.001 step/s] */
-L6470_u_packet L6470_MoveRun(uint8_t dir, uint32_t speed)
+L6470_DATA_T L6470_MoveRun(uint8_t dir, uint32_t speed)
 {
     int32_t speed_val = (int32_t)round((double)speed / SPEED_RESOLUTION);
+
 #if defined (L6470_PRINT_MESSAGE)
     int32_t temp_speed = (int32_t)round((double)speed_val * SPEED_RESOLUTION);
     if( temp_speed != speed)
         printf("%s %s speed is rounded to %d [x0.001 step/s]\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION, temp_speed);
-    // L6470_u_packet temp = L6470_setting[enum_L6470_MAX_SPEED];
-    // int32_t max_speed = (temp.data.value8b[0] << 8) + (temp.data.value8b[1]);
-    // max_speed = max_speed * MAX_SPEED_RESOLUTION * 10; /* 10times MAX_SPEDD [x0.01 step/s] / SPEED [x0.001 step/s] */ 
-    // if( temp_speed > max_speed )
-        // printf("%s %s speed is over MAX_SPEED. rounded to %d [x0.001 step/s]\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION, max_speed);
+    L6470_u_packet temp = L6470_setting[enum_L6470_MAX_SPEED];
+    int32_t max_speed = (temp.data.value8b[0] << 8) + (temp.data.value8b[1]);
+    max_speed = max_speed * MAX_SPEED_RESOLUTION * 10; /* 10times MAX_SPEDD [x0.01 step/s] / SPEED [x0.001 step/s] */ 
+    if( temp_speed > max_speed )
+        printf("%s %s speed is over MAX_SPEED. rounded to %d [x0.001 step/s]\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION, max_speed);
 
 #endif
     // L6470_ExecCmd(L6470_cmd[enum_L6470_MoveRun],dir,speed_val, "MoveCont");
     return L6470_makeCmd(L6470_cmd[enum_L6470_MoveRun],dir,speed_val);
 }
+
 /* dir = DIR_FWD or DIR_RVS */
-L6470_u_packet L6470_MoveStepClock(uint8_t dir)
+L6470_DATA_T L6470_MoveStepClock(uint8_t dir)
 {
     // L6470_ExecCmd(L6470_cmd[enum_L6470_MOVESTEPCLOCK],dir,0, "MoveStepClock");
     return L6470_makeCmd(L6470_cmd[enum_L6470_MOVESTEPCLOCK],dir,0);
 }
+
 /* step = 0 to 4194303(2^22) [step] */
-L6470_u_packet L6470_MoveStep(uint8_t dir,uint32_t step)
+L6470_DATA_T L6470_MoveStep(uint8_t dir,uint32_t step)
 {
-    L6470_ExecCmd(L6470_cmd[enum_L6470_MOVESTEP],dir,step, "MoveStep");
+    // L6470_ExecCmd(L6470_cmd[enum_L6470_MOVESTEP],dir,step, "MoveStep");
     return L6470_makeCmd(L6470_cmd[enum_L6470_MOVESTEP],dir,step);
 }
+
 /* abs_pos = -2^21 to 2^21 -1 [step]*/
-L6470_u_packet L6470_MoveGoTo(int32_t abs_pos)
+L6470_DATA_T L6470_MoveGoTo(int32_t abs_pos)
 {
     // L6470_ExecCmd(L6470_cmd[enum_L6470_MOVEGOTO],0,abs_pos, "MoveGoTo");
     return L6470_makeCmd(L6470_cmd[enum_L6470_MOVEGOTO],0,abs_pos);
 }
+
 /* dir = DIR_FWD or DIR_RVS, abs_pos = -2^21 to 2^21-1 [step] */
-L6470_u_packet L6470_MoveGoToDir(uint8_t dir,int32_t abs_pos)
+L6470_DATA_T L6470_MoveGoToDir(uint8_t dir,int32_t abs_pos)
 {
     // L6470_ExecCmd(L6470_cmd[enum_L6470_MOVEGOTODIR],dir,abs_pos,"MoveGoToDir");
     return L6470_makeCmd(L6470_cmd[enum_L6470_MOVEGOTODIR],dir,abs_pos);
 }
+
 /* act = ACT_POS_CLEAR or ACT_POS_TO_MARK */
 /* dir = DIR_FWD or DIR_RVS */
 /*speed = 0 to 15625000 [x0.001 step/s] */
-L6470_u_packet L6470_MoveGoToUntil(uint8_t act, uint8_t dir,uint32_t speed)
+L6470_DATA_T L6470_MoveGoToUntil(uint8_t act, uint8_t dir,uint32_t speed)
 {
     int32_t speed_val = (int32_t)round((double)speed / SPEED_RESOLUTION);
 #if defined (L6470_PRINT_MESSAGE)
@@ -547,62 +568,63 @@ L6470_u_packet L6470_MoveGoToUntil(uint8_t act, uint8_t dir,uint32_t speed)
 
 /* act = ACT_POS_CLEAR or ACT_POS_TO_MARK */
 /* dir = DIR_FWD or DIR_RVS */
-L6470_u_packet L6470_MoveRelease(uint8_t act, uint8_t dir)
+L6470_DATA_T L6470_MoveRelease(uint8_t act, uint8_t dir)
 {
     // L6470_ExecCmd(L6470_cmd[enum_L6470_MOVERELEASE],act|dir,0,"MoveRelease");
     return L6470_makeCmd(L6470_cmd[enum_L6470_MOVERELEASE],act|dir,0);
 }
 
-L6470_u_packet L6470_GoHome(void)
+L6470_DATA_T L6470_GoHome(void)
 {
     // L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_GOHOME], "GoHome");
     return L6470_makeCmd(L6470_cmd[enum_L6470_GOHOME], 0, 0);
 }
 
-L6470_u_packet L6470_GoMark(void)
+L6470_DATA_T L6470_GoMark(void)
 {
     // L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_GOMARK], "GoMark");
     return L6470_makeCmd(L6470_cmd[enum_L6470_GOMARK], 0, 0);
 }
 
-L6470_u_packet L6470_ResetPos(void)
+L6470_DATA_T L6470_ResetPos(void)
 {
     // L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_RESETPOS], "ResetPos");
     return L6470_makeCmd(L6470_cmd[enum_L6470_RESETPOS], 0, 0);
 }
 
-L6470_u_packet L6470_ResetDevice(void)
+L6470_DATA_T L6470_ResetDevice(void)
 {
     // L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_RESETDEVICE],"ResetDevice");
     return L6470_makeCmd(L6470_cmd[enum_L6470_RESETDEVICE], 0, 0);
 }
 
-L6470_u_packet L6470_StopSoft(void)
+L6470_DATA_T L6470_StopSoft(void)
 {
     // L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_STOPSOFT], "StopSoft");
     return L6470_makeCmd(L6470_cmd[enum_L6470_STOPSOFT], 0, 0);
 }
 
-L6470_u_packet L6470_StopHard(void)
+L6470_DATA_T L6470_StopHard(void)
 {
     // L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_STOPHARD], "StopHard");
     return L6470_makeCmd(L6470_cmd[enum_L6470_STOPHARD], 0, 0);
 }
 
-L6470_u_packet L6470_HiZSoft(void)
+L6470_DATA_T L6470_HiZSoft(void)
 {
     // L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_HIZSOFT],"HiZSoft");
     return L6470_makeCmd(L6470_cmd[enum_L6470_HIZSOFT], 0, 0);
 }
 
-L6470_u_packet L6470_HiZHard(void)
+L6470_DATA_T L6470_HiZHard(void)
 {
     // L6470_ExecCmd_NoArg(L6470_cmd[enum_L6470_HIZHARD],"HIZHard");
     return L6470_makeCmd(L6470_cmd[enum_L6470_HIZHARD], 0, 0);
 }
 
-L6470_u_packet L6470_makeCmd( L6470_CMD cmd, int orprm, uint32_t arg_param)
+L6470_DATA_T L6470_makeCmd( L6470_CMD cmd, int orprm, uint32_t arg_param)
 {
+    L6470_DATA_T data;
     L6470_u_packet pkt={0};
     // int SPI_res = 0;
 
@@ -628,7 +650,11 @@ L6470_u_packet L6470_makeCmd( L6470_CMD cmd, int orprm, uint32_t arg_param)
         pkt.data.value8b[2] = ((arg_param & 0x0000FF));
     }
 
-    return pkt;
+    data.enum_prm = cmd.self_num;
+    data.s_byte = bit2byte(size) + 1;
+    data.pkt = pkt;
+
+    return data;
     // SPI_res = L6470_rw(&(pkt),bit2byte(size + ADDR_SIZE),msg);
 }
 
@@ -678,36 +704,74 @@ L6470_ABSPOS_T L6470_GetAbsPos(void)
     // int32_t pos = 0;
     // int32_t ret = 0;
     L6470_ABSPOS_T ret = {0}; 
-    L6470_u_packet pkt;
+    L6470_DATA_T data;
     // pos = L6470_GetParam(enum_L6470_ABS_POS);
-    pkt = L6470_GetParam(enum_L6470_ABS_POS);
+    data = L6470_GetParam(enum_L6470_ABS_POS);
 
-    L6470_rw_all(&pkt, L6470_param[enum_L6470_ABS_POS].param_size + 1, "GetAbsPos");
-
-    if(((pos & 0x200000) >> 21) == 1){
-	    pos = (-1) * ((~pos + 1) & 0x3FFFFF);	
+    L6470_DATA_ARRAY ary;
+    for(int itr = 0; itr < L6470_DEV_NUM; itr++) {
+        ary.dev[itr] = data;
     }
 
+    // L6470_rw_all(&pkt, L6470_param[enum_L6470_ABS_POS].param_size + 1, "GetAbsPos");
+    int SPI_res = L6470_rw_multi(&ary, "GetAbsPos");
+
+    L6470_ABSPOS_T ret = {0};
+    for(int itr = 0; itr < L6470_DEV_NUM; itr++){
+
+        int32_t pos = 0;
+        pos |= (ary.dev[itr].pkt.data.value8b[0] << 16); 
+        pos |= (ary.dev[itr].pkt.data.value8b[1] << 8); 
+        pos |= (ary.dev[itr].pkt.data.value8b[2]);
+
+        if(((pos & 0x200000) >> 21) == 1){
+	        pos = (-1) * ((~pos + 1) & 0x3FFFFF);	
+        }
+
+        ret.dev[iter] = pos;
+
 #ifdef L6470_PRINT_MESSAGE
-	printf("pos: %d\n", pos);
+    	printf("Dev %d pos: %d\n",itr, pos);
 #endif
 
-    return pos;
+    }
+
+
+    return ret;
 
 }
 
 
-uint16_t L6470_GetStatus(void)
+L6470_STATUS_T L6470_GetStatus(void)
 {
-    L6470_u_packet pkt={0};
-    int SPI_res = 0;
+    L6470_STATUS_T s_ary = {0};
+    L6470_DATA_ARRAY d_ary;
+    L6470_DATA_T data;
 
-    int size = L6470_param[enum_L6470_GETSTATUS].param_size;
+    data = L6470_Get
+
+    int size = L6470_cmd[enum_L6470_GETSTATUS].send_bit_size;
     pkt.data.reg_addr = L6470_cmd[enum_L6470_GETSTATUS].addr;
 
-    SPI_res = L6470_rw(&(pkt),bit2byte(size + ADDR_SIZE),"GetStatus");
+    data.enum_prm = enum_L6470_GETSTATUS;
+    data.pkt = pkt;
+    data.s_byte = bit2byte(size) + 1;
 
-    return ((pkt.value8b[2] << 8) & (pkt.value8b[3]));
+    for(int itr = 0; itr < L6470_DEV_NUM;itr++){
+        d_ary.dev[itr] = data;
+    }
+
+    int SPI_res = L6470_rw_multi(&d_ary, "GetStatus");
+    // SPI_res = L6470_rw(&(pkt),bit2byte(size + ADDR_SIZE),"GetStatus");
+
+    for(int itr = 0; itr < L6470_DEV_NUM; itr++){
+        L6470_u_packet temp = d_ary.dev[itr].pkt;
+
+        s_ary.dev[itr] = (temp.data.value8b[0] << 8) & (temp.data.value8b[1]);
+    }
+
+    // return ((pkt.value8b[2] << 8) & (pkt.value8b[3]));
+    return s_ary;
 
 }
 
