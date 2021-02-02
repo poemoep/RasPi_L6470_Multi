@@ -17,17 +17,13 @@ int main(int argc, char** argv)
 
     d.dev[0] = L6470_MoveRun(DIR_FWD,256000);
     d.dev[1] = L6470_MoveRun(DIR_FWD,256000);
-    c = getchar();
     L6470_rw_multi(&d, "MoveRun_TEST_1");
-    c = getchar();
     sleep(5);
     pos = L6470_GetAbsPos();
 
     d.dev[0] = L6470_MoveRun(DIR_FWD,512000);
     d.dev[1] = L6470_MoveRun(DIR_RVS,512000);
-    c = getchar();
     L6470_rw_multi(&d, "MoveRun_TEST_2");
-    c = getchar();
     sleep(5);
     pos = L6470_GetAbsPos();
     
@@ -41,52 +37,46 @@ int main(int argc, char** argv)
 
     d.dev[0] = L6470_MoveRun(DIR_RVS,1024000);
     d.dev[1] = L6470_MoveRun(DIR_FWD,1024000);
-    c = getchar();
     L6470_rw_multi(&d, "MoveRun_TEST_3");
-    c = getchar();
     sleep(5);
     pos = L6470_GetAbsPos();
 
 
     d.dev[0] = L6470_StopSoft();
     d.dev[1] = L6470_StopSoft();
-    c = getchar();
     L6470_rw_multi(&d, "MoveRun_StopSoft");
-    c = getchar();
     sleep(5);
     pos = L6470_GetAbsPos();
     
     
     d.dev[0] = L6470_MoveStepClock(DIR_FWD);
     d.dev[1] = L6470_HiZSoft();
-    c = getchar();
     L6470_rw_multi(&d, "MoveStepClock_HiZSoft");
-    c = getchar();
     sleep(3);
     pos = L6470_GetAbsPos();
 
     d.dev[0] = L6470_HiZSoft();
     d.dev[1] = L6470_MoveStepClock(DIR_RVS);
-    c = getchar();
     L6470_rw_multi(&d, "HiZSoft_MoveStepClock");
-    c = getchar();
     sleep(3);
+    pos = L6470_GetAbsPos();
+
+    d.dev[0] = L6470_StopSoft();
+    d.dev[1] = L6470_StopSoft();
+    L6470_rw_multi(&d, "MoveRun_StopSoft");
+    sleep(5);
     pos = L6470_GetAbsPos();
 
     for(int i = 0; i<1; i++){
         d.dev[0] = L6470_MoveStep(DIR_FWD,2000);
         d.dev[1] = L6470_MoveStep(DIR_RVS,4000);
-        c = getchar();
         L6470_rw_multi(&d, "MoveStep");
-        c = getchar();
         sleep(1);
     	pos = L6470_GetAbsPos();
 
         d.dev[0] = L6470_MoveStep(DIR_RVS,4000);
         d.dev[1] = L6470_MoveStep(DIR_FWD,2000);
-        c = getchar();
         L6470_rw_multi(&d, "MoveStep");
-        c = getchar();
         sleep(1);
     	pos = L6470_GetAbsPos();
     }
@@ -100,12 +90,10 @@ int main(int argc, char** argv)
     
     d.dev[0] = L6470_MoveGoTo(pos_aim[0]);
     d.dev[1] = L6470_MoveGoTo(pos_aim[1]);
-    c = getchar();
     L6470_rw_multi(&d, "MoveGoTo");
 
     char flag = 0;
     while(flag == 0){
-   // for(int l = 0 ; l < 20; l++){
 	    pos = L6470_GetAbsPos();
         for(int itr = 0; itr <L6470_DEV_NUM; itr++){
             if(pos.dev[itr] == pos_aim[itr]){
@@ -119,7 +107,6 @@ int main(int argc, char** argv)
     }
 
     
-   // L6470_MoveStep(DIR_RVS,200);
     sleep(1);
 
     pos_aim[0] = -1;
@@ -127,12 +114,10 @@ int main(int argc, char** argv)
     
     d.dev[0] = L6470_MoveGoToDir(DIR_RVS,pos_aim[0]);
     d.dev[1] = L6470_MoveGoToDir(DIR_FWD,pos_aim[1]);
-    c = getchar();
     L6470_rw_multi(&d, "MoveGoToDir");
 
     flag = 0;
     while(flag == 0){
-   // for(int l = 0 ; l < 20; l++){
 	    pos = L6470_GetAbsPos();
         for(int itr = 0; itr <L6470_DEV_NUM; itr++){
             if(pos.dev[itr] == pos_aim[itr]){
@@ -149,9 +134,9 @@ int main(int argc, char** argv)
 
     d.dev[0] = L6470_MoveGoToUntil(ACT_POS_TO_MARK,DIR_FWD,20000);
     d.dev[1] = L6470_MoveGoToUntil(ACT_POS_TO_MARK,DIR_RVS,80000);
-    c = getchar();
     L6470_rw_multi(&d, "MoveGoToUntil");
 
+    flag = 0;
     while(flag == 0){
     	pos = L6470_GetAbsPos();
         for(int itr = 0; itr <L6470_DEV_NUM; itr++){
@@ -171,11 +156,11 @@ int main(int argc, char** argv)
         sleep(1);
     }
 
-    flag = 0;
     d.dev[0] = L6470_GoHome();
     d.dev[1] = L6470_GoHome();
-    c = getchar();
     L6470_rw_multi(&d, "MoveGoHome");
+
+    flag = 0;
     while(flag == 0){
     	pos = L6470_GetAbsPos();
         for(int itr = 0; itr <L6470_DEV_NUM; itr++){
@@ -189,12 +174,11 @@ int main(int argc, char** argv)
         sleep(1);
     }
 
-    flag = 0;
     d.dev[0] = L6470_GoMark();
     d.dev[1] = L6470_GoMark();
-    c = getchar();
     L6470_rw_multi(&d, "MoveGoMark");
 
+    flag = 0;
     while(flag == 0){
     	pos = L6470_GetAbsPos();
         for(int itr = 0; itr <L6470_DEV_NUM; itr++){
@@ -210,7 +194,6 @@ int main(int argc, char** argv)
 
     d.dev[0] = L6470_HiZHard();
     d.dev[1] = L6470_HiZHard();
-    c = getchar();
     L6470_rw_multi(&d, "HiZHard");
     
     return 0;
