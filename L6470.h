@@ -385,6 +385,8 @@ typedef struct{
   L6470_u_packet pkt;
 }L6470_DATA_T;
 
+
+#include "L6470_user.h"
 extern const  L6470_CMD L6470_cmd[CMD_NUM];
 extern const  L6470_PARAM L6470_param[PARAM_NUM];
 //----prottype declaration---
