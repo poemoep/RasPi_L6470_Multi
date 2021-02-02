@@ -89,8 +89,8 @@ const  L6470_CMD L6470_cmd[CMD_NUM] =
 };
 
 L6470_DATA_T L6470_makeCmd( L6470_CMD cmd, int orprm, uint32_t arg_param);
-static void L6470_ExecCmd( L6470_CMD cmd, int orprm, uint32_t arg_param,const char* msg);
-static void L6470_ExecCmd_NoArg( L6470_CMD cmd, const char* msg);
+// static void L6470_ExecCmd( L6470_CMD cmd, int orprm, uint32_t arg_param,const char* msg);
+// static void L6470_ExecCmd_NoArg( L6470_CMD cmd, const char* msg);
 static L6470_u_packet generate_pkt(int enum_param,int32_t val);
 static L6470_u_packet generate_pkt_with_percentage(int enum_param, int32_t percentage);
 
@@ -500,7 +500,7 @@ L6470_DATA_T L6470_GetParam(int enum_param)
 
     data.s_byte = bit2byte(size) + 1;
     data.enum_prm = enum_param;
-    data.pkt = pkt:
+    data.pkt = pkt;
     return data;
 }
 
@@ -629,7 +629,7 @@ L6470_DATA_T L6470_HiZHard(void)
 
 L6470_DATA_T L6470_makeCmd( L6470_CMD cmd, int orprm, uint32_t arg_param)
 {
-    L6470_DATA_T data;
+    L6470_DATA_T data = {0};
     L6470_u_packet pkt={0};
     // int SPI_res = 0;
 
@@ -640,7 +640,7 @@ L6470_DATA_T L6470_makeCmd( L6470_CMD cmd, int orprm, uint32_t arg_param)
 #if defined (L6470_PRINT_MESSAGE)
         printf("%s AbortCmd size_over cmdsize:2^%d, but arg is %d\n ",L6470_PRINT_HEADER, cmd.send_bit_size,arg_param);
 #endif
-        return pkt;
+        return data;
     }
     if(0 == size){
 
@@ -663,45 +663,45 @@ L6470_DATA_T L6470_makeCmd( L6470_CMD cmd, int orprm, uint32_t arg_param)
     // SPI_res = L6470_rw(&(pkt),bit2byte(size + ADDR_SIZE),msg);
 }
 
-static void L6470_ExecCmd( L6470_CMD cmd, int orprm, uint32_t arg_param,const char* msg)
-{
-    L6470_u_packet pkt={0};
-    int SPI_res = 0;
+// static void L6470_ExecCmd( L6470_CMD cmd, int orprm, uint32_t arg_param,const char* msg)
+// {
+//     L6470_u_packet pkt={0};
+//     int SPI_res = 0;
 
-    int size = cmd.send_bit_size;
-    pkt.data.reg_addr = (cmd.addr | orprm);
-    if(pow(2,cmd.send_bit_size) < abs(arg_param))
-    {
-#if defined (L6470_PRINT_MESSAGE)
-        printf("%s AbortCmd size_over cmdsize:2^%d, but arg is %d\n ",L6470_PRINT_HEADER, cmd.send_bit_size,arg_param);
-#endif
-        return;
-    }
-    if(8 >= size){
-        pkt.data.value8b[0] = ((arg_param & 0x0000FF));
-    }else if (16 >= size){
-        pkt.data.value8b[0] = ((arg_param & 0x00FF00) >> 8);
-        pkt.data.value8b[1] = ((arg_param & 0x0000FF));
-    }else{
-        pkt.data.value8b[0] = ((arg_param & 0xFF0000) >> 16);
-        pkt.data.value8b[1] = ((arg_param & 0x00FF00) >> 8);
-        pkt.data.value8b[2] = ((arg_param & 0x0000FF));
-    }
+//     int size = cmd.send_bit_size;
+//     pkt.data.reg_addr = (cmd.addr | orprm);
+//     if(pow(2,cmd.send_bit_size) < abs(arg_param))
+//     {
+// #if defined (L6470_PRINT_MESSAGE)
+//         printf("%s AbortCmd size_over cmdsize:2^%d, but arg is %d\n ",L6470_PRINT_HEADER, cmd.send_bit_size,arg_param);
+// #endif
+//         return;
+//     }
+//     if(8 >= size){
+//         pkt.data.value8b[0] = ((arg_param & 0x0000FF));
+//     }else if (16 >= size){
+//         pkt.data.value8b[0] = ((arg_param & 0x00FF00) >> 8);
+//         pkt.data.value8b[1] = ((arg_param & 0x0000FF));
+//     }else{
+//         pkt.data.value8b[0] = ((arg_param & 0xFF0000) >> 16);
+//         pkt.data.value8b[1] = ((arg_param & 0x00FF00) >> 8);
+//         pkt.data.value8b[2] = ((arg_param & 0x0000FF));
+//     }
 
-    SPI_res = L6470_rw(&(pkt),bit2byte(size + ADDR_SIZE),msg);
-}
+//     SPI_res = L6470_rw(&(pkt),bit2byte(size + ADDR_SIZE),msg);
+// }
 
-static void L6470_ExecCmd_NoArg( L6470_CMD cmd, const char* msg)
-{
-    L6470_u_packet pkt={0};
-    int SPI_res = 0;
+// static void L6470_ExecCmd_NoArg( L6470_CMD cmd, const char* msg)
+// {
+//     L6470_u_packet pkt={0};
+//     int SPI_res = 0;
         
-    int size = cmd.send_bit_size;
-    pkt.data.reg_addr = cmd.addr;
+//     int size = cmd.send_bit_size;
+//     pkt.data.reg_addr = cmd.addr;
 
-    SPI_res = L6470_rw(&(pkt),bit2byte(size + ADDR_SIZE),msg);
+//     SPI_res = L6470_rw(&(pkt),bit2byte(size + ADDR_SIZE),msg);
 
-}
+// }
 
 // int32_t L6470_GetAbsPos(void)
 L6470_ABSPOS_T L6470_GetAbsPos(void)
@@ -721,7 +721,6 @@ L6470_ABSPOS_T L6470_GetAbsPos(void)
     // L6470_rw_all(&pkt, L6470_param[enum_L6470_ABS_POS].param_size + 1, "GetAbsPos");
     int SPI_res = L6470_rw_multi(&ary, "GetAbsPos");
 
-    L6470_ABSPOS_T ret = {0};
     for(int itr = 0; itr < L6470_DEV_NUM; itr++){
 
         int32_t pos = 0;
@@ -733,7 +732,7 @@ L6470_ABSPOS_T L6470_GetAbsPos(void)
 	        pos = (-1) * ((~pos + 1) & 0x3FFFFF);	
         }
 
-        ret.dev[iter] = pos;
+        ret.dev[itr] = pos;
 
 #ifdef L6470_PRINT_MESSAGE
     	printf("Dev %d pos: %d\n",itr, pos);
@@ -752,9 +751,8 @@ L6470_STATUS_T L6470_GetStatus(void)
     L6470_STATUS_T s_ary = {0};
     L6470_DATA_ARRAY d_ary;
     L6470_DATA_T data;
-
-    data = L6470_Get
-
+    L6470_u_packet pkt = {0};
+    
     int size = L6470_cmd[enum_L6470_GETSTATUS].send_bit_size;
     pkt.data.reg_addr = L6470_cmd[enum_L6470_GETSTATUS].addr;
 

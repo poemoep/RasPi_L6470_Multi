@@ -396,7 +396,7 @@ void L6470_setting_init(void);
 void L6470_init(void);
 // int  L6470_rw(L6470_DATA_T *data,const char* msg);
 // int  L6470_rw_all(L6470_DATA_ARRAY *datum, const char* msg);
-int  L6470_rw_multi(L6470_DATA_ARRAY *datum, const char* msg, ...);
+int  L6470_rw_multi(L6470_DATA_ARRAY *datum, const char* msg);
 L6470_DATA_T L6470_nop(int times);
 L6470_DATA_T L6470_SetParam(int enum_param,uint32_t value);
 L6470_DATA_T L6470_GetParam(int param);
