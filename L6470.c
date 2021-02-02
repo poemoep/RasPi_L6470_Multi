@@ -243,47 +243,48 @@ void L6470_init(void)
 // }
 
 /* transmite same packet to all device */
-int L6470_rw_all(L6470_DATA_ARRAY datum, const char* msg)
-{
-    //uint8_t *data;
-    //data = pkt->value8b;
+// int L6470_rw_all(L6470_DATA_ARRAY *datum, const char* msg)
+// {
+//     //uint8_t *data;
+//     //data = pkt->value8b;
 
-    // printf("copy pkt\n");
-    // L6470_u_packet pkts[L6470_DEV_NUM] = {0};
-    // for(int itr = 0; itr < L6470_DEV_NUM; itr++){
-    //     pkts[itr] = *pkt;
-    // }
+//     // printf("copy pkt\n");
+//     // L6470_u_packet pkts[L6470_DEV_NUM] = {0};
+//     // for(int itr = 0; itr < L6470_DEV_NUM; itr++){
+//     //     pkts[itr] = *pkt;
+//     // }
 
-    /* summlize packet */
-    // uint8_t t_pkt[L6470_DEV_NUM*len] = {0};
-    // printf("summlize pkt\n");
-    uint8_t t_pkt[L6470_DEV_NUM*len];
-    for(int itr = 0; itr < L6470_DEV_NUM; itr++){
-        for(int pkt_num = 0; pkt_num < len; pkt_num++){
-            t_pkt[itr + L6470_DEV_NUM*pkt_num] = (pkts[itr]).value8b[pkt_num];
-        }
-    }    
-// #ifdef L6470_PRINT_MESSAGE
-//     L6470_u_packet send = *pkt;
-// #endif
+//     /* summlize packet */
+//     // uint8_t t_pkt[L6470_DEV_NUM*len] = {0};
+//     // printf("summlize pkt\n");
+//     int len = datum->.dev[itr]
+//     uint8_t t_pkt[L6470_DEV_NUM*len];
+//     for(int itr = 0; itr < L6470_DEV_NUM; itr++){
+//         for(int pkt_num = 0; pkt_num < len; pkt_num++){
+//             t_pkt[itr + L6470_DEV_NUM*pkt_num] = (pkts[itr]).value8b[pkt_num];
+//         }
+//     }    
+// // #ifdef L6470_PRINT_MESSAGE
+// //     L6470_u_packet send = *pkt;
+// // #endif
 
-    // printf("transmite pkt\n");
-	int i = 0,j = 0;
-	for (i = 0; i<len; i++){
-	//	j += wiringPiSPIDataRW(L6470_SPI_CH, data,1);
-        // printf("transmit: %02x, %02x, ", t_pkt[i*L6470_DEV_NUM], t_pkt[i*L6470_DEV_NUM + 1]);
-		j += wiringPiSPIDataRW(L6470_SPI_CH, (unsigned char *)(t_pkt + i*L6470_DEV_NUM),L6470_DEV_NUM);
-        // printf("Receive:  %02x, %02x\n", t_pkt[i*L6470_DEV_NUM], t_pkt[i*L6470_DEV_NUM + 1]);
-	//	data++;
-	}
+//     // printf("transmite pkt\n");
+// 	int i = 0,j = 0;
+// 	for (i = 0; i<len; i++){
+// 	//	j += wiringPiSPIDataRW(L6470_SPI_CH, data,1);
+//         // printf("transmit: %02x, %02x, ", t_pkt[i*L6470_DEV_NUM], t_pkt[i*L6470_DEV_NUM + 1]);
+// 		j += wiringPiSPIDataRW(L6470_SPI_CH, (unsigned char *)(t_pkt + i*L6470_DEV_NUM),L6470_DEV_NUM);
+//         // printf("Receive:  %02x, %02x\n", t_pkt[i*L6470_DEV_NUM], t_pkt[i*L6470_DEV_NUM + 1]);
+// 	//	data++;
+// 	}
 
 
-// #ifdef L6470_PRINT_MESSAGE
-//     L6470_debug_print(msg,&(send),pkt);
-// #endif
+// // #ifdef L6470_PRINT_MESSAGE
+// //     L6470_debug_print(msg,&(send),pkt);
+// // #endif
 
-   return j; 
-}
+//    return j; 
+// }
 
 int L6470_rw_multi(L6470_DATA_ARRAY* datum, const char * msg)
 {
