@@ -96,11 +96,9 @@ int main(int argc, char** argv)
 
     for(int itr = 0; itr < L6470_DEV_NUM; itr++){
         pos_aim[itr]=10000;
-        pos_now[itr] = pos_aim[itr] + 1;
-
     }
     
-    d.dev[0] = L6470_MoveGoto(pos_aim[0]);
+    d.dev[0] = L6470_MoveGoTo(pos_aim[0]);
     d.dev[1] = L6470_MoveGoTo(pos_aim[1]);
     c = getchar();
     L6470_rw_multi(&d, "MoveGoTo");
@@ -163,7 +161,7 @@ int main(int argc, char** argv)
             if(mark[itr][0] == mark[itr][1]){
                 flag++;
             }else{
-                flag = 0:
+                flag = 0;
             }
         }
         if(flag != L6470_DEV_NUM) flag = 0;
@@ -181,7 +179,7 @@ int main(int argc, char** argv)
     	    if(pos.dev[itr] == 0){
                 flag++;
             }else{
-                flag = 0:
+                flag = 0;
             }
         }
         if(flag != L6470_DEV_NUM) flag = 0;
@@ -200,7 +198,7 @@ int main(int argc, char** argv)
             if(mark[itr][0] == pos.dev[itr]){
                 flag++;
             }else{
-                flag = 0:
+                flag = 0;
             }
         }
         if(flag != L6470_DEV_NUM) flag = 0;
