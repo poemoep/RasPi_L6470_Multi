@@ -15,14 +15,14 @@ int main(int argc, char** argv)
     L6470_ABSPOS_T pos;
     char c = 0;
 
-    d.dev[0] = L6470_MoveRun(DIR_FWD,400000);
-    d.dev[1] = L6470_MoveRun(DIR_FWD,400000);
+    d.dev[0] = L6470_MoveRun(DIR_FWD,200000);
+    d.dev[1] = L6470_MoveRun(DIR_FWD,200000);
     L6470_rw_multi(&d, "MoveRun_TEST_1");
     sleep(5);
     pos = L6470_GetAbsPos();
 
-    d.dev[0] = L6470_MoveRun(DIR_FWD,800000);
-    d.dev[1] = L6470_MoveRun(DIR_RVS,800000);
+    d.dev[0] = L6470_MoveRun(DIR_FWD,400000);
+    d.dev[1] = L6470_MoveRun(DIR_RVS,400000);
     L6470_rw_multi(&d, "MoveRun_TEST_2");
     sleep(5);
     pos = L6470_GetAbsPos();
@@ -35,8 +35,8 @@ int main(int argc, char** argv)
     sleep(5);
     pos = L6470_GetAbsPos();
 
-    d.dev[0] = L6470_MoveRun(DIR_RVS,1600000);
-    d.dev[1] = L6470_MoveRun(DIR_FWD,1600000);
+    d.dev[0] = L6470_MoveRun(DIR_RVS,800000);
+    d.dev[1] = L6470_MoveRun(DIR_FWD,800000);
     L6470_rw_multi(&d, "MoveRun_TEST_3");
     sleep(5);
     pos = L6470_GetAbsPos();
@@ -68,13 +68,13 @@ int main(int argc, char** argv)
     pos = L6470_GetAbsPos();
 
     for(int i = 0; i<1; i++){
-        d.dev[0] = L6470_MoveStep(DIR_FWD,2000);
-        d.dev[1] = L6470_MoveStep(DIR_RVS,4000);
+        d.dev[0] = L6470_MoveStep(DIR_FWD,1000);
+        d.dev[1] = L6470_MoveStep(DIR_RVS,1000);
         L6470_rw_multi(&d, "MoveStep");
         sleep(1);
     	pos = L6470_GetAbsPos();
 
-        d.dev[0] = L6470_MoveStep(DIR_RVS,4000);
+        d.dev[0] = L6470_MoveStep(DIR_RVS,2000);
         d.dev[1] = L6470_MoveStep(DIR_FWD,2000);
         L6470_rw_multi(&d, "MoveStep");
         sleep(1);
@@ -132,8 +132,8 @@ int main(int argc, char** argv)
 
     int mark[2][2] = {{1,2},{1,2}}; 
 
-    d.dev[0] = L6470_MoveGoToUntil(ACT_POS_TO_MARK,DIR_FWD,20000);
-    d.dev[1] = L6470_MoveGoToUntil(ACT_POS_TO_MARK,DIR_RVS,80000);
+    d.dev[0] = L6470_MoveGoToUntil(ACT_POS_TO_MARK,DIR_FWD,200000);
+    d.dev[1] = L6470_MoveGoToUntil(ACT_POS_TO_MARK,DIR_RVS,400000);
     L6470_rw_multi(&d, "MoveGoToUntil");
 
     flag = 0;

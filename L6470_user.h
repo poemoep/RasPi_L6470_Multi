@@ -26,16 +26,16 @@
 
 /* EL_POS = (STEP_ePOS_0deg | STEP_ePOS_90deg | STEP_ePOS_180deg | STEP_ePOS_270deg) */
 /*       |= uStep(0 to 127) */ 
-#define USER_EL_POS		    (STEP_ePOS_90deg | 63)
+#define USER_EL_POS		    (STEP_ePOS_0deg | 0)
 
 /* MARK = -2097152 to 2097151 (-2^21 ~ +2^21-1) [step]*/
 #define USER_MARK		    (-2000)
 
 /* ACC = 1455 to 5959000 [x0.01 step/s^2]*/
-#define USER_ACC		    (803200)
+#define USER_ACC		    (160000)
 
 /* DEC = 1455 to 5959000 [x0.01 step/s^2]*/
-#define USER_DEC		    (200800)
+#define USER_DEC		    (160000)
 
 /* MAX_SPEED = 1525 to 1561000 [x0.01 step/s]*/
 #define USER_MAX_SPEED		(1561000)
@@ -83,7 +83,7 @@
 /* USER_STEP_MODE = SYNC_EN (if use SYNC_EN) */
 /*               |= (SYNC_FFS_2DIV | SYNC_FFS | SYNC_FFS_2TIMES | SYNC_FFS_4TIMES | SYNC_FFS_8TIMES | SYNC_FFS_16TIMES | SYNC_FFS_32TIMES | SYNC_FFS_64TIMES) */
 /*              |= (STEP_FULL | STEP_HALF | STEP_4DIV | STEP_8DIV | STEP_16DIV | STEP_32DIV | STEP_64DIV | STEP_128DIV) */ 
-#define USER_STEP_MODE		(STEP_4DIV)
+#define USER_STEP_MODE		(STEP_FULL)
 
 /* ALARM_EN = ALM_FULL (if use all alarm) */
 /*          = ALM_NOTHING (if use no alarm) */
