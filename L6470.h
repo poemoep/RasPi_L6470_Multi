@@ -416,5 +416,7 @@ L6470_DATA_T L6470_HiZHard(void);
 L6470_ABSPOS_T L6470_GetAbsPos(void);
 L6470_STATUS_T L6470_GetStatus(void);
 
+void L6470_ResetDevice_all(void);
+void L6470_nop_all(int times);
 #endif
 
