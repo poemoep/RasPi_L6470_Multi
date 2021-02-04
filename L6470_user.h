@@ -38,11 +38,11 @@
 #define USER_DEC		    (160000)
 
 /* MAX_SPEED = 1525 to 1561000 [x0.01 step/s]*/
-#define USER_MAX_SPEED		(1561000)
+#define USER_MAX_SPEED		(160000)
 
 /* MIX_SPEED = 0 to 976300 [x0.001 step/s]*/
 /*          |= ENABLE_LSPD (if use LSPD)*/
-#define USER_MIN_SPEED		(ENABLE_LSPD |200000)
+#define USER_MIN_SPEED		(200000)
 
 /*KVA_HOLD = 0 to 10000 [0.01%] */
 #define USER_KVAL_HOLD		(1602)
