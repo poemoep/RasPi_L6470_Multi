@@ -190,7 +190,7 @@ void L6470_init(void)
 {
 
     L6470_SPI_init();
-    L6470_ResetDevice();
+    L6470_ResetDevice_all();
     L6470_setting_init();
 
 #ifdef L6470_PRINT_MESSAGE
@@ -399,6 +399,19 @@ L6470_DATA_T L6470_HiZSoft(void)
 L6470_DATA_T L6470_HiZHard(void)
 {
     return L6470_makeCmd(L6470_cmd[enum_L6470_HIZHARD], 0, 0);
+}
+
+void L6470_ResetDevice_all(void)
+{
+    L6470_DATA_ARRAY ary;
+    L6470_DATA_T data = L6470_ResetDevice();
+
+    for(int itr = 0; itr < L6470_DEV_NUM; itr++){
+        ary.dev[itr] = data;
+    }
+
+    L6470_rw_multi(&ary,"All Device Reset.");
+
 }
 
 L6470_DATA_T L6470_makeCmd( L6470_CMD cmd, int orprm, uint32_t arg_param)
