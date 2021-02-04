@@ -15,14 +15,14 @@ int main(int argc, char** argv)
     L6470_ABSPOS_T pos;
     char c = 0;
 
-    d.dev[0] = L6470_MoveRun(DIR_FWD,256000);
-    d.dev[1] = L6470_MoveRun(DIR_FWD,256000);
+    d.dev[0] = L6470_MoveRun(DIR_FWD,400000);
+    d.dev[1] = L6470_MoveRun(DIR_FWD,400000);
     L6470_rw_multi(&d, "MoveRun_TEST_1");
     sleep(5);
     pos = L6470_GetAbsPos();
 
-    d.dev[0] = L6470_MoveRun(DIR_FWD,512000);
-    d.dev[1] = L6470_MoveRun(DIR_RVS,512000);
+    d.dev[0] = L6470_MoveRun(DIR_FWD,800000);
+    d.dev[1] = L6470_MoveRun(DIR_RVS,800000);
     L6470_rw_multi(&d, "MoveRun_TEST_2");
     sleep(5);
     pos = L6470_GetAbsPos();
@@ -35,8 +35,8 @@ int main(int argc, char** argv)
     sleep(5);
     pos = L6470_GetAbsPos();
 
-    d.dev[0] = L6470_MoveRun(DIR_RVS,1024000);
-    d.dev[1] = L6470_MoveRun(DIR_FWD,1024000);
+    d.dev[0] = L6470_MoveRun(DIR_RVS,1600000);
+    d.dev[1] = L6470_MoveRun(DIR_FWD,1600000);
     L6470_rw_multi(&d, "MoveRun_TEST_3");
     sleep(5);
     pos = L6470_GetAbsPos();
