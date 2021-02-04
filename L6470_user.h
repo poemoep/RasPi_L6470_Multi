@@ -32,10 +32,10 @@
 #define USER_MARK		    (-2000)
 
 /* ACC = 1455 to 5959000 [x0.01 step/s^2]*/
-#define USER_ACC		    (160000)
+#define USER_ACC		    (80000)
 
 /* DEC = 1455 to 5959000 [x0.01 step/s^2]*/
-#define USER_DEC		    (160000)
+#define USER_DEC		    (80000)
 
 /* MAX_SPEED = 1525 to 1561000 [x0.01 step/s]*/
 #define USER_MAX_SPEED		(160000)
