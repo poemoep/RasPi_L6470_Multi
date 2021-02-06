@@ -42,7 +42,7 @@
 
 /* MIX_SPEED = 0 to 976300 [x0.001 step/s]*/
 /*          |= ENABLE_LSPD (if use LSPD)*/
-#define USER_MIN_SPEED		(200000)
+#define USER_MIN_SPEED		(0)
 
 /*KVA_HOLD = 0 to 10000 [0.01%] */
 #define USER_KVAL_HOLD		(1602)
