@@ -10,7 +10,7 @@
 void MoveRun_Test(uint8_t dir_1, uint32_t speed_1, uint32_t dir_2, uint32_t speed_2);
 void StopSoft_Test(void);
 void MoveStepClock_Test(uint8_t dir_1, uint8_t dir_2);
-void MoveStep_Test(uint8_t dir_1,uint32_t speed_1, uint8_t dir_2, uint32_t speed_2){
+void MoveStep_Test(uint8_t dir_1,uint32_t speed_1, uint8_t dir_2, uint32_t speed_2);
 
 L6470_DATA_ARRAY d;
 L6470_ABSPOS_T pos;
