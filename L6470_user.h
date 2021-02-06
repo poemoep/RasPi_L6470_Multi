@@ -57,7 +57,7 @@
 #define USER_KVAL_DEC		(4000)
 
 /* INT_SPEED = 0 to 9764000 [x0.0001 step/s] */
-#define USER_INT_SPEED		(9765000)
+#define USER_INT_SPEED		(2000000)
 
 /* ST_SLP = 0 to 3825 [x0.000001% s/step] */
 #define USER_ST_SLP		    (3825)

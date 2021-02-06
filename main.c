@@ -6,81 +6,69 @@
 #include <stdio.h>
 #include "L6470.h"
 
+
+void MoveRun_Test(uint8_t dir_1, uint32_t speed_1, uint32_t dir_2, uint32_t speed_2);
+void StopSoft_Test(void);
+void MoveStepClock_Test(uint8_t dir_1, uint8_t dir_2);
+void MoveStep_Test(uint8_t dir_1,uint32_t speed_1, uint8_t dir_2, uint32_t speed_2){
+
+L6470_DATA_ARRAY d;
+L6470_ABSPOS_T pos;
+
 int main(int argc, char** argv)
 {
 
     L6470_init();
 
-    L6470_DATA_ARRAY d;
-    L6470_ABSPOS_T pos;
     char c = 0;
 
-    d.dev[0] = L6470_MoveRun(DIR_FWD,200000);
-    d.dev[1] = L6470_MoveRun(DIR_FWD,200000);
-    L6470_rw_multi(&d, "MoveRun_TEST_1");
+    MoveRun_Test(DIR_FWD,200000, DIR_RVS, 200000);
     sleep(5);
     pos = L6470_GetAbsPos();
 
-    d.dev[0] = L6470_MoveRun(DIR_FWD,400000);
-    d.dev[1] = L6470_MoveRun(DIR_RVS,400000);
-    L6470_rw_multi(&d, "MoveRun_TEST_2");
+    MoveRun_Test(DIR_FWD,400000, DIR_RVS, 400000);
     sleep(5);
     pos = L6470_GetAbsPos();
     
-    
-    
-    d.dev[0] = L6470_StopSoft();
-    d.dev[1] = L6470_StopSoft();
-    L6470_rw_multi(&d, "MoveRun_StopSoft");
+    MoveRun_Test(DIR_FWD,800000, DIR_RVS, 800000);
     sleep(5);
     pos = L6470_GetAbsPos();
 
-    d.dev[0] = L6470_MoveRun(DIR_RVS,800000);
-    d.dev[1] = L6470_MoveRun(DIR_FWD,800000);
-    L6470_rw_multi(&d, "MoveRun_TEST_3");
-    sleep(5);
-    pos = L6470_GetAbsPos();
-
-
-    d.dev[0] = L6470_StopSoft();
-    d.dev[1] = L6470_StopSoft();
-    L6470_rw_multi(&d, "MoveRun_StopSoft");
+    MoveRun_Test(DIR_FWD,1600000, DIR_RVS, 1600000);
     sleep(5);
     pos = L6470_GetAbsPos();
     
-    
-    d.dev[0] = L6470_MoveStepClock(DIR_FWD);
-    d.dev[1] = L6470_HiZSoft();
-    L6470_rw_multi(&d, "MoveStepClock_HiZSoft");
+    StopSoft_Test();
+    sleep(5);
+    pos = L6470_GetAbsPos();
+
+    MoveRun_Test(DIR_RVS,1600000, DIR_FWD, 1600000);
+    sleep(5);
+    StopSoft_Test();
+    sleep(2);
+    pos = L6470_GetAbsPos();
+
+    MoveStepClock_Test(DIR_RVS,DIR_FWD);
     sleep(3);
     pos = L6470_GetAbsPos();
 
-    d.dev[0] = L6470_HiZSoft();
-    d.dev[1] = L6470_MoveStepClock(DIR_RVS);
-    L6470_rw_multi(&d, "HiZSoft_MoveStepClock");
-    sleep(3);
-    pos = L6470_GetAbsPos();
-
-    d.dev[0] = L6470_StopSoft();
-    d.dev[1] = L6470_StopSoft();
-    L6470_rw_multi(&d, "MoveRun_StopSoft");
+    StopSoft_Test();
     sleep(5);
     pos = L6470_GetAbsPos();
 
-    for(int i = 0; i<1; i++){
-        d.dev[0] = L6470_MoveStep(DIR_FWD,1000);
-        d.dev[1] = L6470_MoveStep(DIR_RVS,1000);
-        L6470_rw_multi(&d, "MoveStep");
-        sleep(1);
-    	pos = L6470_GetAbsPos();
+    for(int i = 0; i<3; i++){
+        for(int j = 0; j< 5; j++){
+            MoveStep_Test(DIR_FWD,200,DIR_FWD,200);
+            sleep(1);
+        	pos = L6470_GetAbsPos();
+        }
 
-        d.dev[0] = L6470_MoveStep(DIR_RVS,2000);
-        d.dev[1] = L6470_MoveStep(DIR_FWD,2000);
-        L6470_rw_multi(&d, "MoveStep");
-        sleep(1);
-    	pos = L6470_GetAbsPos();
+        for(int j = 0; j< 5; j++){
+            MoveStep_Test(DIR_RVS,400,DIR_RVS,400);
+            sleep(1);
+        	pos = L6470_GetAbsPos();
+        }
     }
-    sleep(3);
 
     int pos_aim[L6470_DEV_NUM];
 
@@ -197,4 +185,28 @@ int main(int argc, char** argv)
     L6470_rw_multi(&d, "HiZHard");
     
     return 0;
+}
+
+void MoveRun_Test(uint8_t dir_1, uint32_t speed_1, uint32_t dir_2, uint32_t speed_2){
+    d.dev[0] = L6470_MoveRun(dir_1, speed_1);
+    d.dev[1] = L6470_MoveRun(dir_2, speed_2);
+    L6470_rw_multi(&d, "MoveRun_TEST");
+}
+
+void StopSoft_Test(void){
+    d.dev[0] = L6470_StopSoft();
+    d.dev[1] = L6470_StopSoft();
+    L6470_rw_multi(&d, "StopSoft_Test");
+}
+
+void MoveStepClock_Test(uint8_t dir_1, uint8_t dir_2){
+    d.dev[0] = L6470_MoveStepClock(dir_1);
+    d.dev[1] = L6470_MoveStepClock(dir_2);
+    L6470_rw_multi(&d, "MoveStepClock_Test");
+}
+
+void MoveStep_Test(uint8_t dir_1,uint32_t speed_1, uint8_t dir_2, uint32_t speed_2){
+    d.dev[0] = L6470_MoveStep(dir_1,speed_1);
+    d.dev[1] = L6470_MoveStep(dir_2,speed_2);
+    L6470_rw_multi(&d, "MoveStep_Test");
 }
