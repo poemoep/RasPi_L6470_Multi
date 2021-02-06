@@ -58,13 +58,13 @@ int main(int argc, char** argv)
 
     for(int i = 0; i<3; i++){
         for(int j = 0; j< 5; j++){
-            MoveStep_Test(DIR_FWD,200,DIR_FWD,200);
+            MoveStep_Test(DIR_FWD,200*256,DIR_FWD,200*256);
             sleep(1);
         	pos = L6470_GetAbsPos();
         }
 
         for(int j = 0; j< 5; j++){
-            MoveStep_Test(DIR_RVS,400,DIR_RVS,400);
+            MoveStep_Test(DIR_RVS,400*256,DIR_RVS,400*256);
             sleep(1);
         	pos = L6470_GetAbsPos();
         }
