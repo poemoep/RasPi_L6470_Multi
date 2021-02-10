@@ -65,7 +65,7 @@ int main(int argc, char** argv)
 
         for(int j = 0; j< 5; j++){
             MoveStep_Test(DIR_RVS,400*256,DIR_RVS,400*256);
-            sleep(1);
+            sleep(2);
         	pos = L6470_GetAbsPos();
         }
     }
