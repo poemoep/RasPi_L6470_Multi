@@ -17,7 +17,7 @@
 #define SPI_SPEED 1000000 // [Hz]
 
 /* ----define SPI slave setting----*/
-#define L6470_DEV_NUM (1)
+#define L6470_DEV_NUM (2)
 
 /* All parametors are generated same value. */
 

@@ -77,7 +77,7 @@ int main(int argc, char** argv)
     }
     
     d.dev[0] = L6470_MoveGoTo(pos_aim[0]);
-    // d.dev[1] = L6470_MoveGoTo(pos_aim[1]);
+    d.dev[1] = L6470_MoveGoTo(pos_aim[1]);
     L6470_rw_multi(&d, "MoveGoTo");
 
     char flag = 0;
@@ -98,10 +98,10 @@ int main(int argc, char** argv)
     sleep(1);
 
     pos_aim[0] = -1;
-    // pos_aim[1] = 20000;    
+    pos_aim[1] = 20000;    
     
     d.dev[0] = L6470_MoveGoToDir(DIR_RVS,pos_aim[0]);
-    // d.dev[1] = L6470_MoveGoToDir(DIR_FWD,pos_aim[1]);
+    d.dev[1] = L6470_MoveGoToDir(DIR_FWD,pos_aim[1]);
     L6470_rw_multi(&d, "MoveGoToDir");
 
     flag = 0;
@@ -121,7 +121,7 @@ int main(int argc, char** argv)
     int mark[2][2] = {{1,2},{1,2}}; 
 
     d.dev[0] = L6470_MoveGoToUntil(ACT_POS_TO_MARK,DIR_FWD,200000);
-    // d.dev[1] = L6470_MoveGoToUntil(ACT_POS_TO_MARK,DIR_RVS,400000);
+    d.dev[1] = L6470_MoveGoToUntil(ACT_POS_TO_MARK,DIR_RVS,400000);
     L6470_rw_multi(&d, "MoveGoToUntil");
 
     flag = 0;
@@ -145,7 +145,7 @@ int main(int argc, char** argv)
     }
 
     d.dev[0] = L6470_GoHome();
-    // d.dev[1] = L6470_GoHome();
+    d.dev[1] = L6470_GoHome();
     L6470_rw_multi(&d, "MoveGoHome");
 
     flag = 0;
@@ -163,7 +163,7 @@ int main(int argc, char** argv)
     }
 
     d.dev[0] = L6470_GoMark();
-    // d.dev[1] = L6470_GoMark();
+    d.dev[1] = L6470_GoMark();
     L6470_rw_multi(&d, "MoveGoMark");
 
     flag = 0;
@@ -181,7 +181,7 @@ int main(int argc, char** argv)
     }
 
     d.dev[0] = L6470_HiZHard();
-    // d.dev[1] = L6470_HiZHard();
+    d.dev[1] = L6470_HiZHard();
     L6470_rw_multi(&d, "HiZHard");
     
     return 0;
@@ -189,24 +189,24 @@ int main(int argc, char** argv)
 
 void MoveRun_Test(uint8_t dir_1, uint32_t speed_1, uint32_t dir_2, uint32_t speed_2){
     d.dev[0] = L6470_MoveRun(dir_1, speed_1);
-    // d.dev[1] = L6470_MoveRun(dir_2, speed_2);
+    d.dev[1] = L6470_MoveRun(dir_2, speed_2);
     L6470_rw_multi(&d, "MoveRun_TEST");
 }
 
 void StopSoft_Test(void){
     d.dev[0] = L6470_StopSoft();
-    // d.dev[1] = L6470_StopSoft();
+    d.dev[1] = L6470_StopSoft();
     L6470_rw_multi(&d, "StopSoft_Test");
 }
 
 void MoveStepClock_Test(uint8_t dir_1, uint8_t dir_2){
     d.dev[0] = L6470_MoveStepClock(dir_1);
-    // d.dev[1] = L6470_MoveStepClock(dir_2);
+    d.dev[1] = L6470_MoveStepClock(dir_2);
     L6470_rw_multi(&d, "MoveStepClock_Test");
 }
 
 void MoveStep_Test(uint8_t dir_1,uint32_t speed_1, uint8_t dir_2, uint32_t speed_2){
     d.dev[0] = L6470_MoveStep(dir_1,speed_1);
-    // d.dev[1] = L6470_MoveStep(dir_2,speed_2);
+    d.dev[1] = L6470_MoveStep(dir_2,speed_2);
     L6470_rw_multi(&d, "MoveStep_Test");
 }
