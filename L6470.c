@@ -477,7 +477,7 @@ L6470_ABSPOS_T L6470_GetAbsPos(void)
     int SPI_res = L6470_rw_multi(&ary, "GetAbsPos");
 
     for(int itr = 0; itr < L6470_DEV_NUM; itr++){
-        printf("hoge");
+
         int32_t pos = 0;
         pos |= (ary.dev[itr].pkt.data.value8b[0] << 16); 
         pos |= (ary.dev[itr].pkt.data.value8b[1] << 8); 
