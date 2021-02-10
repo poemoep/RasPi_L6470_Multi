@@ -25,7 +25,7 @@ int main(int argc, char** argv)
     MoveRun_Test(DIR_FWD,200000, DIR_RVS, 200000);
     sleep(5);
     pos = L6470_GetAbsPos();
-    printf("hogepiyo")
+    printf("hogepiyo");
 
     MoveRun_Test(DIR_FWD,400000, DIR_RVS, 400000);
     sleep(5);
