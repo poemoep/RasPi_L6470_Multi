@@ -48,13 +48,13 @@
 #define USER_KVAL_HOLD		(1602)
 
 /*KVA_HOLD = 0 to 10000 [0.01%] */
-#define USER_KVAL_RUN		(3000)
+#define USER_KVAL_RUN		(2000)
 
 /*KVA_HOLD = 0 to 10000 [0.01%] */
-#define USER_KVAL_ACC		(4000)
+#define USER_KVAL_ACC		(2000)
 
 /*KVA_HOLD = 0 to 10000 [0.01%] */
-#define USER_KVAL_DEC		(4000)
+#define USER_KVAL_DEC		(2000)
 
 /* INT_SPEED = 0 to 9764000 [x0.0001 step/s] */
 #define USER_INT_SPEED		(2000000)
