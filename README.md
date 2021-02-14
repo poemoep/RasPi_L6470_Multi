@@ -2,7 +2,7 @@
 
 RasPi_L6470_Multi is a library that makes L6470(STMicro) easy to use on Raspberry Pi.
 
-* Daisy chain supported(tested 2 axis)
+* Daisy chain supported(tested 2 axes)
 
 # Features
 you can do with this library
@@ -41,8 +41,7 @@ if you don't want to get debug message like "[L6470 DEBUG]: ~",
 Comment out "#define L6470_PRINT_MESSAGE" from "L6470_user.h".
 
 
-
-If you want to change number of axes, edit "L6470_DEV_NUM" value in "L6470_user.h"
+If you want to change number of axes, edit "L6470_DEV_NUM" value in "L6470_user.h".
 
 # Author
 
