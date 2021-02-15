@@ -1,4 +1,4 @@
-# RasPi_L6470
+# RasPi_L6470_Multi
 
 RasPi_L6470_Multi is a library that makes L6470(STMicro) easy to use on Raspberry Pi.
 
