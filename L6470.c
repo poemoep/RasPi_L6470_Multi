@@ -582,6 +582,13 @@ L6470_u_packet gen_EL_POS(int32_t step_u_step)
 
     uint32_t val;
     val = (step + u_step);
+
+#if defined (L6470_PRINT_MESSAGE)
+    if( val != (val & 0x1FF)){
+        printf(" %s %s EL_POS is overflow\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
+    }
+#endif
+
     L6470_u_packet pkt = generate_pkt(enum_L6470_EL_POS, val);
     return pkt;
 }
@@ -613,6 +620,10 @@ L6470_u_packet gen_ACC(int32_t step_per_ss)
         printf(" %s %s ACC is rounded to %d [x0.01 step/s^2]\n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * ACC_RESOLUTION));
     } 
+    if( val != (val & 0xFFF)){
+        printf(" %s %s ACC is overflow\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
+    }
+
 #endif
 
     L6470_u_packet pkt = generate_pkt(enum_L6470_ACC, val);
@@ -633,6 +644,9 @@ L6470_u_packet gen_DEC(int32_t step_per_ss)
         printf(" %s %s DEC is rounded to %d [x0.01 step/s^2]\n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * DEC_RESOLUTION));
     } 
+    if( val != (val & 0xFFF)){
+        printf(" %s %s DEC is overflow\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
+    }
 #endif
 
     L6470_u_packet pkt = generate_pkt(enum_L6470_DEC, val);
@@ -653,6 +667,9 @@ L6470_u_packet gen_MAX_SPEED(int32_t step_per_s)
         printf(" %s %s MAX_SPEED is rounded to %d [x0.01 step/s]\n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * MAX_SPEED_RESOLUTION));
     } 
+    if( val != (val & 0x3FF)){
+        printf(" %s %s MAX_SPEED is overflow\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
+    }
 #endif
 
     L6470_u_packet pkt = generate_pkt(enum_L6470_MAX_SPEED, val);
@@ -680,6 +697,9 @@ L6470_u_packet gen_MIN_SPEED(int32_t enable_LSPD_step_per_s)
         printf(" %s %s MIN_SPEED is rounded to %d [x0.001 step/s]\n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * MIN_SPEED_RESOLUTION));
     } 
+    if( val != (val & 0x7FF)){
+        printf(" %s %s MAX_SPEED is overflow\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
+    }
 #endif
     if(DISABLE != enable_LSPD) val |= ENABLE_LSPD_BIT;
 
@@ -724,6 +744,9 @@ L6470_u_packet gen_INT_SPEED(int32_t step_per_s)
         printf(" %s %s INT_SPEED is rounded to %d [x0.0001 step/s] \n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * INT_SPEED_RESOLUTION));
     } 
+    if( val != (val & 0x3FFF)){
+        printf(" %s %s INT_SPEED is overflow\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
+    }
 #endif
 
     L6470_u_packet pkt = generate_pkt(enum_L6470_INT_SPEED, val);
@@ -738,6 +761,9 @@ L6470_u_packet gen_ST_SLP(int32_t slp)
     if((int32_t)round((double)val * ST_SLP_RESOLUTION) != slp){
         printf(" %s %s ST_SLP is rounded to %d [x0.000001] \n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * ST_SLP_RESOLUTION));
+    }
+    if( val != (val & 0xFF)){
+        printf(" %s %s ST_SLP is overflow\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
     } 
 #endif
     L6470_u_packet pkt = generate_pkt(enum_L6470_ST_SLP, val);
@@ -753,6 +779,9 @@ L6470_u_packet gen_FN_SLP_ACC(int32_t slp_acc)
         printf(" %s %s FN_SLP_ACC is rounded to %d [x0.000001]\n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * FN_SLP_ACC_RESOLUTION));
     }
+    if( val != (val & 0xFF)){
+        printf(" %s %s FN_SLP_ACC is overflow\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
+    } 
 #endif
     L6470_u_packet pkt = generate_pkt(enum_L6470_FN_SLP_ACC, val);
     return pkt;
@@ -766,6 +795,9 @@ L6470_u_packet gen_FN_SLP_DEC(int32_t slp_dec)
     if((int32_t)round((double)val * FN_SLP_DEC_RESOLUTION) != slp_dec){
         printf(" %s %s FN_SLP_DEC is rounded to %d [x0.000001]\n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * FN_SLP_DEC_RESOLUTION));
+    } 
+    if( val != (val & 0xFF)){
+        printf(" %s %s FN_SLP_DEC is overflow\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
     } 
 #endif
     L6470_u_packet pkt = generate_pkt(enum_L6470_FN_SLP_DEC, val);
@@ -781,6 +813,9 @@ L6470_u_packet gen_K_THERM(int32_t k_therm)
         printf(" %s %s K_THERM is rounded to %d [x0.00001]\n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * K_THERM_RESOLUTION) + K_THERM_MIN);
     } 
+    if( val != (val & 0xF)){
+        printf(" %s %s K_THERM is overflow\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
+    } 
 #endif
     L6470_u_packet pkt = generate_pkt(enum_L6470_K_THERM, val);
     return pkt;
@@ -794,6 +829,9 @@ L6470_u_packet gen_OCD_TH(int32_t ocd_th)
     if(((int32_t)round((double)val * OCD_TH_RESOLUTION) + OCD_TH_RESOLUTION) != ocd_th){
         printf(" %s %s OCD_TH is rounded to %d [mA]\n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, ((int32_t)round((double)val * OCD_TH_RESOLUTION) + OCD_TH_RESOLUTION));
+    } 
+    if( val != (val & 0xF)){
+        printf(" %s %s OCD_TH is overflow\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
     } 
 #endif
     L6470_u_packet pkt = generate_pkt(enum_L6470_OCD_TH, val);
@@ -809,6 +847,9 @@ L6470_u_packet gen_STALL_TH(int32_t stall_th)
         printf(" %s %s STALL_TH is rounded to %d [x0.01 mA]\n",
                         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, ((int32_t)round((double)val * STALL_TH_RESOLUTION) + STALL_TH_RESOLUTION));
     } 
+    if( val != (val & 0x7F)){
+        printf(" %s %s STALL_TH is overflow\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
+    } 
 #endif    
     L6470_u_packet pkt = generate_pkt(enum_L6470_STALL_TH, val);
     return pkt;
@@ -822,6 +863,10 @@ L6470_u_packet gen_FS_SPD(int32_t fs_spd)
         printf(" %s %s FS_SPD is rounded to %d [x0.01 step/s]\n",
         L6470_PRINT_HEADER, L6470_PRINT_CAUTION, (int32_t)round((double)val * FS_SPD_RESOLUTION) + FS_SPD_MIN);
     } 
+    if(val != (val & 0x3FF)){
+        printf(" %s %s FS_SPD is overflow.\n",
+        L6470_PRINT_HEADER, L6470_PRINT_CAUTION);
+    }
 #endif   
 
     L6470_u_packet pkt = generate_pkt(enum_L6470_FS_SPD, val);
@@ -837,6 +882,9 @@ L6470_u_packet gen_STEP_MODE(int32_t mode)
     uint8_t step_sel = (mode & STEP_SEL_MASK);
     if( (sync_sel >> SYNC_SEL_ofset) > step_sel)
         printf(" %s %s sync_sel is less than equal step_sel.\n",L6470_PRINT_HEADER, L6470_PRINT_CAUTION);    
+    if( val != (val & 0xFF)){
+        printf(" %s %s STEP_MODE is overflow\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
+    } 
 #endif
     int32_t val = mode;
     L6470_u_packet pkt = generate_pkt(enum_L6470_STEP_MODE, val);
@@ -847,6 +895,11 @@ L6470_u_packet gen_STEP_MODE(int32_t mode)
 L6470_u_packet gen_ALARM_EN(int32_t alm)
 {
     int32_t val = alm;
+#if defined (L6470_PRINT_MESSAGE)
+    if( val != (val & 0xFF)){
+        printf(" %s %s ALARM_EN is overflow\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
+    } 
+#endif
     L6470_u_packet pkt = generate_pkt(enum_L6470_ALARM_EN, val);
     return pkt;
 }
@@ -868,6 +921,11 @@ L6470_u_packet gen_CONFIG(int32_t param)
 #endif
 
     int32_t val =  param;
+#if defined (L6470_PRINT_MESSAGE)
+    if( val != (val & 0xFFFF)){
+        printf(" %s %s CONFIG is overflow\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
+    } 
+#endif
     L6470_u_packet pkt = generate_pkt(enum_L6470_CONFIG, val);
     return pkt;
 }
@@ -909,6 +967,10 @@ static L6470_u_packet generate_pkt_with_percentage(int enum_param, int32_t perce
 #if defined (L6470_PRINT_MESSAGE)
     if((int32_t)round(((double)val * 10000) / 255) != percentage)
         printf(" %s %s percentage is round to %d[0.01%%]\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION,(int32_t)round((val * 10000)/ 255));
+
+    if( val != (val & 0xFF)){
+        printf(" %s %s KVAL_percentage is overflow\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
+    }
 #endif
     pkt = generate_pkt(enum_param,val);
     return pkt;

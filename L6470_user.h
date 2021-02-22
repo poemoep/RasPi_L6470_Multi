@@ -77,7 +77,7 @@
 /* STALL_TH = 3125 to 400000 [x 0.01 mA]*/
 #define USER_STALL_TH		(2030 * 100)
 
-/* FS_SPD = 763 to 1562500 [x0.01 step/s]*/
+/* FS_SPD = 763 to 1560075 [x0.01 step/s]*/
 #define USER_FS_SPD		    (1000)
 
 /* USER_STEP_MODE = SYNC_EN (if use SYNC_EN) */
