@@ -876,6 +876,8 @@ L6470_u_packet gen_FS_SPD(int32_t fs_spd)
 /* sync_en = SYNC_EN or DISABLE, sync_sel = SYNC_FFS_*, step_sel = STEP_* */
 L6470_u_packet gen_STEP_MODE(int32_t mode)
 {
+
+    int32_t val = mode;
 #if defined (L6470_PRINT_MESSAGE)
     uint8_t sync_en = (mode & SYNC_EN);
     uint8_t sync_sel = (mode & SYNC_SEL_MASK);
@@ -886,7 +888,6 @@ L6470_u_packet gen_STEP_MODE(int32_t mode)
         printf(" %s %s STEP_MODE is overflow\n",L6470_PRINT_HEADER,L6470_PRINT_CAUTION);
     } 
 #endif
-    int32_t val = mode;
     L6470_u_packet pkt = generate_pkt(enum_L6470_STEP_MODE, val);
     return pkt;
 }

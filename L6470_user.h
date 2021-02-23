@@ -32,10 +32,10 @@
 #define USER_MARK		    (-2000)
 
 /* ACC = 1455 to 5959000 [x0.01 step/s^2]*/
-#define USER_ACC		    (200000)
+#define USER_ACC		    (10000)
 
 /* DEC = 1455 to 5959000 [x0.01 step/s^2]*/
-#define USER_DEC		    (200000)
+#define USER_DEC		    (10000)
 
 /* MAX_SPEED = 1525 to 1561000 [x0.01 step/s]*/
 #define USER_MAX_SPEED		(160000)
@@ -45,40 +45,40 @@
 #define USER_MIN_SPEED		(0)
 
 /*KVA_HOLD = 0 to 10000 [0.01%] */
-#define USER_KVAL_HOLD		(1602)
+#define USER_KVAL_HOLD		(1000)
 
-/*KVA_HOLD = 0 to 10000 [0.01%] */
-#define USER_KVAL_RUN		(2000)
+/*KVA_RUN = 0 to 10000 [0.01%] */
+#define USER_KVAL_RUN		(1000)
 
-/*KVA_HOLD = 0 to 10000 [0.01%] */
+/*KVA_ACC = 0 to 10000 [0.01%] */
 #define USER_KVAL_ACC		(2000)
 
-/*KVA_HOLD = 0 to 10000 [0.01%] */
+/*KVA_DEC = 0 to 10000 [0.01%] */
 #define USER_KVAL_DEC		(2000)
 
 /* INT_SPEED = 0 to 9764000 [x0.0001 step/s] */
-#define USER_INT_SPEED		(2000000)
+#define USER_INT_SPEED		(0)
 
 /* ST_SLP = 0 to 3825 [x0.000001% s/step] */
-#define USER_ST_SLP		    (3825)
+#define USER_ST_SLP		    (0)
 
 /* FN_SLP_ACC = 0 to 3825 [x0.000001 ] */
-#define USER_FN_SLP_ACC		(3825)
+#define USER_FN_SLP_ACC		(0)
 
 /* FN_SLP_DEC = 0 to 3825 [x0.000001 ] */
-#define USER_FN_SLP_DEC		(3825)
+#define USER_FN_SLP_DEC		(0)
 
 /* K_THERM = 100000 to 146875 [x0.00001]*/
 #define USER_K_THERM		(1.46875 * 100000)
 
 /* OCD_TH = 375 to 6000 [mA]*/
-#define USER_OCD_TH		    (3.38 * 1000)
+#define USER_OCD_TH		    (6.00 * 1000)
 
 /* STALL_TH = 3125 to 400000 [x 0.01 mA]*/
 #define USER_STALL_TH		(2030 * 100)
 
 /* FS_SPD = 763 to 1560075 [x0.01 step/s]*/
-#define USER_FS_SPD		    (1000)
+#define USER_FS_SPD		    (1560075)
 
 /* USER_STEP_MODE = SYNC_EN (if use SYNC_EN) */
 /*               |= (SYNC_FFS_2DIV | SYNC_FFS | SYNC_FFS_2TIMES | SYNC_FFS_4TIMES | SYNC_FFS_8TIMES | SYNC_FFS_16TIMES | SYNC_FFS_32TIMES | SYNC_FFS_64TIMES) */
